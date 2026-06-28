@@ -1,0 +1,243 @@
+---
+const GITHUB = "https://github.com/saulo1112"; // TODO: per-repo URLs
+
+const featured = [
+  {
+    tags: ["GIS", "Machine learning", "FastAPI"],
+    title: "EUDR Forest Risk Assessment",
+    problem:
+      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance — using only open satellite data?",
+    stack: ["Python", "PostGIS", "Earth Engine", "scikit-learn", "Docker"],
+    caseStudy: "/projects/eudr-risk-assessment",
+    github: GITHUB,
+    placeholder: "[screenshot: EUDR dashboard]",
+  },
+  {
+    tags: ["GIS", "Spatial ML", "FastAPI"],
+    title: "Retail Site Selection Engine",
+    problem:
+      "Which neighborhoods in Bogotá should D1 expand to next? A spatial ML ranking engine using H3 hexagons and census data.",
+    stack: ["Python", "PostGIS", "H3", "Streamlit", "Docker"],
+    caseStudy: "/projects/site-selection-engine",
+    github: GITHUB,
+    placeholder: "[screenshot: H3 map]",
+  },
+];
+
+const small = [
+  { title: "RioCauca Baseline", tags: ["GIS", "Python"], github: GITHUB },
+  { title: "Cali River Biomonitoring", tags: ["GIS", "Research"], github: GITHUB },
+  { title: "Fudambient", tags: ["Web", "Client work"], github: GITHUB },
+  { title: "OptiCoder", tags: ["Mobile", "React Native"], github: GITHUB },
+];
+---
+
+<section class="projects" id="work">
+  <div class="inner">
+    <h2>Selected work</h2>
+
+    <div class="featured">
+      {
+        featured.map((p) => (
+          <article class="card">
+            <div class="card-body">
+              <ul class="tags">
+                {p.tags.map((tag, i) => (
+                  <li class={i === 0 ? "tag tag-accent" : "tag"}>{tag}</li>
+                ))}
+              </ul>
+
+              <h3 class="title">{p.title}</h3>
+              <p class="problem">{p.problem}</p>
+
+              <p class="stack">{p.stack.join(" · ")}</p>
+
+              <div class="links">
+                <a class="link" href={p.caseStudy}>
+                  Case study →
+                </a>
+                <a
+                  class="link"
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  GitHub ↗
+                </a>
+              </div>
+            </div>
+
+            <div class="shot" role="img" aria-label={p.placeholder}>
+              <span>{p.placeholder}</span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="grid">
+      {
+        small.map((p) => (
+          <article class="mini">
+            <h3 class="mini-title">{p.title}</h3>
+            <ul class="tags">
+              {p.tags.map((tag, i) => (
+                <li class={i === 0 ? "tag tag-accent" : "tag"}>{tag}</li>
+              ))}
+            </ul>
+            <a class="link" href={p.github} target="_blank" rel="noopener">
+              GitHub ↗
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding: 96px 24px;
+  }
+
+  .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+  }
+
+  /* ---- Featured cards ---- */
+  .featured {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+    padding: 28px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+
+  .title {
+    font-size: 20px;
+    margin: 14px 0 10px;
+  }
+
+  .problem {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 46ch;
+  }
+
+  .stack {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  .links {
+    margin-top: 18px;
+    display: flex;
+    gap: 20px;
+  }
+
+  .link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: color 0.15s ease;
+  }
+
+  .link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .shot {
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-control);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  /* ---- Tags ---- */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .tag-accent {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    border-color: var(--color-accent);
+  }
+
+  /* ---- Small project grid ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .mini {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+
+  .mini-title {
+    font-size: 15px;
+  }
+
+  .mini .link {
+    margin-top: auto;
+  }
+
+  @media (max-width: 768px) {
+    .projects {
+      padding: 64px 24px;
+    }
+    .card {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .shot {
+      order: -1;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

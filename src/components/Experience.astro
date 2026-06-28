@@ -1,0 +1,111 @@
+---
+// TODO: replace bracketed placeholders with real roles before launch.
+const roles = [
+  {
+    role: "[Role]",
+    company: "[Company]",
+    dates: "[Dates]",
+    bullets: ["[impact bullet 1]", "[impact bullet 2]"],
+  },
+  {
+    role: "[Role]",
+    company: "[Company]",
+    dates: "[Dates]",
+    bullets: ["[impact bullet 1]", "[impact bullet 2]"],
+  },
+];
+---
+
+<section class="experience" id="experience">
+  <div class="inner">
+    <h2>Experience</h2>
+
+    <ul class="list">
+      {
+        roles.map((r) => (
+          <li class="entry">
+            <p class="head">
+              <span class="role">{r.role}</span>
+              <span class="sep"> at </span>
+              <span class="company">{r.company}</span>
+              <span class="dates"> · {r.dates}</span>
+            </p>
+            <ul class="bullets">
+              {r.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding: 96px 24px;
+  }
+
+  .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+  }
+
+  .entry {
+    padding: 24px 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .head {
+    font-size: 15px;
+  }
+
+  .role {
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .sep,
+  .company {
+    color: var(--color-text-secondary);
+  }
+
+  .dates {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .bullets {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bullets li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .bullets li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .experience {
+      padding: 64px 24px;
+    }
+  }
+</style>

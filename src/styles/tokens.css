@@ -1,0 +1,48 @@
+/* Design tokens — the single source of truth for color, type and radii.
+   :root holds the LIGHT theme. html.dark overrides for the DARK theme.
+   No hardcoded hex values should appear anywhere else in the project. */
+
+:root {
+  /* Surfaces */
+  --color-bg: #FAFAF8;
+  --color-surface: #F0EFEB;
+
+  /* Accent */
+  --color-accent: #0F6E56;
+  --color-accent-hover: #0C5A47;
+
+  /* Text */
+  --color-text-primary: #0F0F0F;
+  --color-text-secondary: #3D3C39;
+  --color-text-muted: #5F5E5A;
+
+  /* Lines */
+  --color-border: #D3D1C7;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Radii */
+  --radius-control: 8px;
+  --radius-card: 12px;
+}
+
+html.dark {
+  /* Surfaces */
+  --color-bg: #0F0F0F;
+  --color-surface: #161616;
+
+  /* Accent */
+  --color-accent: #1D9E75;
+  --color-accent-hover: #24B384;
+
+  /* Text */
+  --color-text-primary: #FAFAF8;
+  --color-text-secondary: #B5B4AD;
+  --color-text-muted: #888780;
+
+  /* Lines */
+  --color-border: #2C2C2A;
+}

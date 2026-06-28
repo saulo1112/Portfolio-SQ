@@ -1,0 +1,225 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+
+const github = "https://github.com/saulo1112"; // TODO: repo URL
+
+const tags = ["GIS", "Spatial ML", "FastAPI"];
+const stack = [
+  { name: "Python", note: "spatial feature engineering and ranking model" },
+  { name: "PostGIS", note: "hex-to-census spatial joins" },
+  { name: "H3", note: "hexagonal spatial indexing of Bogotá" },
+  { name: "Streamlit", note: "interactive ranking dashboard" },
+  { name: "Docker", note: "reproducible app and data environment" },
+];
+
+const title = "Retail Site Selection Engine — Saulo Quiñones";
+const description =
+  "A spatial ML ranking engine that scores Bogotá neighborhoods for retail expansion using H3 hexagons and census data.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <main class="case">
+    <div class="inner">
+      <a class="back" href="/#work">← Back to work</a>
+
+      <ul class="tags">
+        {tags.map((t, i) => <li class={i === 0 ? "tag tag-accent" : "tag"}>{t}</li>)}
+      </ul>
+
+      <h1>Retail Site Selection Engine</h1>
+      <p class="lede">
+        Which neighborhoods in Bogotá should D1 expand to next? A spatial ML
+        ranking engine using H3 hexagons and census data.
+      </p>
+
+      <section class="block">
+        <h2>Context</h2>
+        <p>
+          Expansion decisions for a discount retailer are usually made on
+          intuition. The goal here was to turn open census and location data into
+          a ranked, defensible shortlist of where to open next across Bogotá.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Approach</h2>
+        <ul class="steps">
+          <li>
+            Partitioned Bogotá into a uniform grid of H3 hexagons as the unit of
+            analysis.
+          </li>
+          <li>
+            Joined census demographics, existing store locations and points of
+            interest to each hexagon in PostGIS.
+          </li>
+          <li>
+            Built spatial features — population and income proxies, competitor
+            proximity, and accessibility per hex.
+          </li>
+          <li>
+            Trained a spatial ML model in scikit-learn to score and rank each
+            hexagon by expansion potential.
+          </li>
+          <li>
+            Delivered the ranking through an interactive Streamlit map dashboard,
+            containerized with Docker.
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Stack</h2>
+        <ul class="stacklist">
+          {stack.map((s) => (
+            <li>
+              <span class="name">{s.name}</span>
+              <span class="note">{s.note}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Results</h2>
+        <p class="todo">
+          TODO: add top-ranked zones, validation against existing high-performing
+          stores, and model evaluation once finalized.
+        </p>
+      </section>
+
+      <div class="links">
+        <a class="link" href={github} target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .case {
+    padding: 96px 24px;
+  }
+
+  .inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    transition: color 0.15s ease;
+  }
+  .back:hover {
+    color: var(--color-text-primary);
+  }
+
+  h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(28px, 4vw, 38px);
+  }
+
+  .lede {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 58ch;
+  }
+
+  .block {
+    margin-top: 48px;
+  }
+
+  .block h2 {
+    margin-bottom: 14px;
+  }
+
+  .block p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .steps li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  .steps li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--color-text-muted);
+  }
+
+  .stacklist li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .stacklist .name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+  .stacklist .note {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .todo {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+  .tag-accent {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    border-color: var(--color-accent);
+  }
+
+  .links {
+    margin-top: 48px;
+  }
+  .link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+  .link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  @media (max-width: 768px) {
+    .case {
+      padding: 64px 24px;
+    }
+  }
+</style>
