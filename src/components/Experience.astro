@@ -1,111 +1,441 @@
 ---
-// TODO: replace bracketed placeholders with real roles before launch.
-const roles = [
-  {
-    role: "[Role]",
-    company: "[Company]",
-    dates: "[Dates]",
-    bullets: ["[impact bullet 1]", "[impact bullet 2]"],
-  },
-  {
-    role: "[Role]",
-    company: "[Company]",
-    dates: "[Dates]",
-    bullets: ["[impact bullet 1]", "[impact bullet 2]"],
-  },
+const entries = [
+  { date: "NOW",          title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
+  { date: "2025",         title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
+  { date: "Sep–Dec 2025", title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
+  { date: "Mar–Sep 2025", title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
+  { date: "2024",         title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
 ];
 ---
 
-<section class="experience" id="experience">
-  <div class="inner">
-    <h2>Experience</h2>
+<section id="experience" class="experience-section">
+  <!-- Atmospheric glow behind the heading -->
+  <div class="experience-glow" aria-hidden="true"></div>
+  <!-- Cursor spotlight overlay -->
+  <div class="experience-spotlight" id="experience-spotlight" aria-hidden="true"></div>
 
-    <ul class="list">
-      {
-        roles.map((r) => (
-          <li class="entry">
-            <p class="head">
-              <span class="role">{r.role}</span>
-              <span class="sep"> at </span>
-              <span class="company">{r.company}</span>
-              <span class="dates"> · {r.dates}</span>
-            </p>
-            <ul class="bullets">
-              {r.bullets.map((b) => (
-                <li>{b}</li>
-              ))}
-            </ul>
-          </li>
-        ))
-      }
-    </ul>
+  <div class="experience-container">
+
+    <div class="experience-header">
+      <p class="experience-eyebrow">EXPERIENCE</p>
+      <h2 class="experience-heading">
+        My career &amp;<br />
+        <span class="experience-heading-accent">experience</span>
+      </h2>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <!-- Line and orb are absolutely positioned; JS sets their X from the node column -->
+      <div class="timeline-line" id="timeline-line" aria-hidden="true"></div>
+      <div class="timeline-orb" id="timeline-orb"  aria-hidden="true"></div>
+
+      {entries.map((entry, i) => (
+        <div class="timeline-entry" data-index={i}>
+          {/* Col 1 — role + company, right-aligned */}
+          <div class="timeline-left">
+            <p class="entry-title" data-date={entry.date}>{entry.title}</p>
+            <p class="entry-company">{entry.company}</p>
+          </div>
+          {/* Col 2 — large date label, right-aligned flush to the line */}
+          <div class="timeline-date">
+            <p class="node-date">{entry.date}</p>
+          </div>
+          {/* Col 3 — 2 px column; the dot sits here, line runs through it */}
+          <div class="timeline-node">
+            <div class="node-dot"></div>
+          </div>
+          {/* Col 4 — description, left-aligned */}
+          <div class="timeline-right">
+            <p class="entry-description">{entry.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
   </div>
 </section>
 
 <style>
-  .experience {
-    padding: 96px 24px;
+  /* ── Section ── */
+  .experience-section {
+    padding: 128px 0;
+    border-top: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
   }
 
-  .inner {
+  /* Diffuse atmospheric glow behind the heading */
+  .experience-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    max-width: 100%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(29, 158, 117, 0.12) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Lens / X-ray overlay ──
+     mix-blend-mode: difference inverts pixel colors at the circle boundary.
+     White (#fff) difference with light text → near-black.
+     White difference with dark background → near-white (glow on bg).
+     Outside the gradient: transparent = no effect, content untouched. */
+  .experience-spotlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: difference;
+    background: radial-gradient(
+      circle 50px at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
+      rgba(255, 255, 255, 1.0) 0%,
+      rgba(255, 255, 255, 0.8) 55%,
+      transparent 100%
+    );
+  }
+
+  /* All content lives below the spotlight overlay */
+  .experience-container {
+    position: relative;
+    z-index: 1;
     max-width: 1100px;
     margin: 0 auto;
+    padding-inline: 24px;
   }
 
-  h2 {
-    margin-bottom: 40px;
+  /* ── Header ── */
+  .experience-header {
+    text-align: center;
+    margin-bottom: 80px;
   }
 
-  .entry {
-    padding: 24px 0;
-    border-top: 1px solid var(--color-border);
+  .experience-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 16px;
   }
 
-  .head {
-    font-size: 15px;
-  }
-
-  .role {
-    font-weight: 500;
+  .experience-heading {
+    font-size: clamp(48px, 7vw, 80px);
+    font-weight: 600;
+    line-height: 1.15;
     color: var(--color-text-primary);
   }
 
-  .sep,
-  .company {
-    color: var(--color-text-secondary);
+  .experience-heading-accent {
+    color: var(--color-accent);
+    filter: brightness(1.5);
+    text-shadow:
+      0 0 40px rgba(29, 158, 117, 0.5),
+      0 0 80px rgba(29, 158, 117, 0.2);
   }
 
-  .dates {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-text-muted);
-  }
-
-  .bullets {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .bullets li {
+  /* ── Timeline shell ── */
+  .timeline {
     position: relative;
-    padding-left: 18px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
   }
 
-  .bullets li::before {
-    content: "—";
+  /* ── Vertical line — JS sets left to match column 3 center ── */
+  .timeline-line {
     position: absolute;
-    left: 0;
-    color: var(--color-text-muted);
+    left: 0; /* overwritten by JS */
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, #25ffb0, #1D9E75, #0F6E56);
+    box-shadow: 0 0 8px rgba(29, 158, 117, 0.4);
+    z-index: 0;
+    pointer-events: none;
   }
 
+  /* ── Traveling orb — JS sets left (same X as line) and top (scroll-driven) ── */
+  .timeline-orb {
+    position: absolute;
+    left: 0; /* overwritten by JS */
+    top: 0;  /* overwritten by JS */
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #25ffb0 40%, #1D9E75 100%);
+    box-shadow:
+      0 0 0 4px rgba(37, 255, 176, 0.2),
+      0 0 20px rgba(37, 255, 176, 0.8),
+      0 0 40px rgba(37, 255, 176, 0.4),
+      0 0 80px rgba(29, 158, 117, 0.2);
+    z-index: 3;
+    pointer-events: none;
+    animation: orbPulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes orbPulse {
+    0%, 100% {
+      box-shadow:
+        0 0 0 4px rgba(37, 255, 176, 0.2),
+        0 0 20px rgba(37, 255, 176, 0.8),
+        0 0 40px rgba(37, 255, 176, 0.4),
+        0 0 80px rgba(29, 158, 117, 0.2);
+    }
+    50% {
+      box-shadow:
+        0 0 0 5px rgba(37, 255, 176, 0.28),
+        0 0 24px rgba(37, 255, 176, 0.9),
+        0 0 48px rgba(37, 255, 176, 0.5),
+        0 0 96px rgba(29, 158, 117, 0.3);
+    }
+  }
+
+  /* ── 4-column entry grid ──
+     Col 1 (1fr)    — role + company, right-aligned
+     Col 2 (180px)  — date label,     right-aligned flush to line
+     Col 3 (2px)    — node dot + line column
+     Col 4 (1fr)    — description,    left-aligned                */
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 1fr 180px 2px 1fr;
+    column-gap: 32px;
+    align-items: center;
+    padding: 50px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Col 1 */
+  .timeline-left {
+    text-align: right;
+  }
+
+  /* Col 2 */
+  .timeline-date {
+    text-align: right;
+  }
+
+  /* Col 3 */
+  .timeline-node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  /* Col 4 */
+  .timeline-right {
+    text-align: left;
+  }
+
+  /* ── Text ── */
+  .entry-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+    transition: opacity 0.25s ease;
+  }
+
+  .entry-company {
+    font-size: 14px;
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    filter: brightness(1.3);
+    transition: opacity 0.25s ease;
+  }
+
+  .node-date {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: opacity 0.25s ease;
+    line-height: 1.1;
+  }
+
+  .entry-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-width: 320px;
+    transition: opacity 0.25s ease;
+  }
+
+  /* ── Static node dot ── */
+  .node-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: 1px solid transparent;
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .node-dot.lit {
+    background: #25ffb0;
+    border-color: #25ffb0;
+    box-shadow: 0 0 8px rgba(37, 255, 176, 0.8);
+  }
+
+  /* ── Mobile ── */
   @media (max-width: 768px) {
-    .experience {
-      padding: 64px 24px;
+    .experience-section {
+      padding: 64px 0;
+    }
+
+    /* Force line/orb to left side; JS X-compute is skipped on mobile
+       via the !important override so they stay at left: 24px */
+    .timeline-line,
+    .timeline-orb {
+      left: 24px !important;
+    }
+
+    .timeline-entry {
+      grid-template-columns: 1fr;
+      column-gap: 0;
+      row-gap: 4px;
+      padding: 36px 0 36px 56px;
+    }
+
+    .timeline-left  { text-align: left; }
+    .timeline-right { text-align: left; }
+
+    /* Date column hidden on mobile; injected inline via CSS attr() */
+    .timeline-date { display: none; }
+
+    .entry-title::after {
+      content: " · " attr(data-date);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-text-muted);
+      font-weight: 400;
+    }
+
+    .timeline-node {
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .entry-description {
+      max-width: 100%;
     }
   }
 </style>
+
+<script>
+  const section  = document.getElementById("experience") as HTMLElement | null;
+  const timeline = document.getElementById("timeline")   as HTMLElement | null;
+  const lineEl   = document.getElementById("timeline-line") as HTMLElement | null;
+  const orb      = document.getElementById("timeline-orb")  as HTMLElement | null;
+  const spotlight = document.getElementById("experience-spotlight") as HTMLElement | null;
+
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>(".timeline-entry")
+  );
+
+  if (section && timeline && lineEl && orb && entries.length) {
+    const dots         = entries.map(e => e.querySelector<HTMLElement>(".node-dot"));
+    const titles       = entries.map(e => e.querySelector<HTMLElement>(".entry-title"));
+    const companies    = entries.map(e => e.querySelector<HTMLElement>(".entry-company"));
+    const dates        = entries.map(e => e.querySelector<HTMLElement>(".node-date"));
+    const descriptions = entries.map(e => e.querySelector<HTMLElement>(".entry-description"));
+
+    // Center Y of an entry relative to .timeline.
+    const centerOf = (el: HTMLElement) => el.offsetTop + el.offsetHeight / 2;
+
+    // Distance → opacity: full at ≤80 px, fades to 0.2 at ≥200 px.
+    const focusOpacity = (dist: number) => {
+      if (dist <= 80)  return 1;
+      if (dist >= 200) return 0.2;
+      return 1 - ((dist - 80) / 120) * 0.8;
+    };
+
+    // ── X position: read center of the 2 px node column from the DOM ──
+    let lineX = 0;
+
+    const computeX = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        lineX = 24;
+      } else {
+        const nodeEl = entries[0]?.querySelector<HTMLElement>(".timeline-node");
+        if (nodeEl) {
+          const nRect = nodeEl.getBoundingClientRect();
+          const tRect = timeline.getBoundingClientRect();
+          lineX = nRect.left + nRect.width / 2 - tRect.left;
+        }
+      }
+      lineEl.style.left = lineX + "px";
+      orb.style.left    = lineX + "px";
+    };
+
+    // ── Scroll-driven orb position + per-entry focus opacity ──
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+
+      const firstY = centerOf(entries[0]);
+      const lastY  = centerOf(entries[entries.length - 1]);
+
+      const progress = Math.max(0, Math.min(1,
+        (window.scrollY - section.offsetTop + window.innerHeight * 0.5) /
+        section.offsetHeight
+      ));
+
+      const orbY = firstY + (lastY - firstY) * progress;
+      orb.style.top = orbY + "px";
+
+      for (let i = 0; i < entries.length; i++) {
+        const dist    = Math.abs(centerOf(entries[i]) - orbY);
+        const opacity = String(focusOpacity(dist));
+
+        if (titles[i])       titles[i]!.style.opacity       = opacity;
+        if (companies[i])    companies[i]!.style.opacity    = opacity;
+        if (dates[i])        dates[i]!.style.opacity        = opacity;
+        if (descriptions[i]) descriptions[i]!.style.opacity = opacity;
+
+        const dot = dots[i];
+        if (dot) dot.classList.toggle("lit", dist <= 40);
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", () => { computeX(); onScroll(); });
+
+    computeX();
+    update();
+
+    // ── Cursor spotlight ──
+    if (spotlight) {
+      section.addEventListener("mouseenter", () => {
+        spotlight.style.opacity = "1";
+      });
+      section.addEventListener("mouseleave", () => {
+        spotlight.style.opacity = "0";
+      });
+      section.addEventListener("mousemove", (e) => {
+        const rect = section.getBoundingClientRect();
+        spotlight.style.setProperty("--mouse-x", (e.clientX - rect.left) + "px");
+        spotlight.style.setProperty("--mouse-y", (e.clientY - rect.top)  + "px");
+      });
+    }
+  }
+</script>
