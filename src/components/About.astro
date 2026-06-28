@@ -342,6 +342,7 @@
       originalY: number;
       baseScale: number;
       scaleMul: number;
+      isRecessed: boolean;
     };
 
     const objects: FloatObject[] = [];
@@ -396,9 +397,10 @@
         }
         mesh.position.set(px, py, zone.z());
 
-        // Right-side objects: permanently darker and recessed so they never
-        // compete with the text column. Overrides the silver material + zone z.
-        if (px > 2) {
+        // Far side-zone objects (both left & right) become a dim, recessed
+        // background so the hand-placed featured shapes read as prominent.
+        // Center objects (x in [-3, 2], over the text) keep their bright look.
+        if (px > 2 || px < -3) {
           material.color = new THREE.Color(0x2a2a2a);
           material.metalness = 0.6;
           material.roughness = 0.4;
@@ -422,9 +424,62 @@
           originalY: mesh.position.y,
           baseScale,
           scaleMul: 1,
+          isRecessed: px > 2 || px < -3,
         });
       }
     }
+
+    // ---- Featured (hand-placed, deterministic) objects ----
+    // Fixed bright-silver shapes at the four outer edges, clear of the text.
+    // They reuse pool geometries and join objects[] so they inherit the float,
+    // rotation, mouse-hover and per-object cleanup.
+    const addFeatured = (
+      geometry: THREE.BufferGeometry,
+      x: number,
+      y: number,
+      z: number,
+      baseScale: number,
+    ) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x888888,
+        metalness: 1.0,
+        roughness: 0.05,
+        envMapIntensity: 1.0,
+        transparent: false,
+        opacity: 1.0,
+      });
+      material.emissive = new THREE.Color(0x000000);
+
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.scale.setScalar(baseScale);
+      mesh.position.set(x, y, z);
+      mesh.rotation.set(
+        rand(0, Math.PI * 2),
+        rand(0, Math.PI * 2),
+        rand(0, Math.PI * 2),
+      );
+      scene.add(mesh);
+
+      objects.push({
+        mesh,
+        material,
+        floatSpeed: rand(0.3, 0.6),
+        floatAmplitude: rand(0.3, 0.5),
+        rotationSpeedX: rand(0.001, 0.003),
+        rotationSpeedY: rand(0.001, 0.003),
+        originalY: y,
+        baseScale,
+        scaleMul: 1,
+        isRecessed: false,
+      });
+    };
+
+    //[Horizontal, Vertical, Depth]
+
+    addFeatured(geometries[4], -18.3, 4.5, 2, 1.7); // torus  — upper-left
+    addFeatured(geometries[3], -18.4, -4.0, 2, 1.7); // icosa  — lower-left
+    addFeatured(geometries[1], 19, 3, 2, 1.2); // cube   — upper-right
+    addFeatured(geometries[0], 20.7, -6.0, 0.5, 1.4); // sphere — lower-right
 
     // ---- Mouse / raycaster ----
     const mouseNdc = new THREE.Vector2(-10, -10); // off-screen until first move
@@ -449,9 +504,10 @@
     const clock = new THREE.Clock();
     let rafId = 0;
 
-    // Scratch vectors reused each frame to map the cursor into world space.
+    // Scratch vectors reused each frame (avoids per-frame allocations).
     const mouseWorld = new THREE.Vector3();
     const pointBTarget = new THREE.Vector3();
+    const projVec = new THREE.Vector3(); // reused for screen-space projection
     const clampOffset = (v: number, base: number, max: number) =>
       Math.max(base - max, Math.min(base + max, v));
 
@@ -489,6 +545,20 @@
           o.originalY + Math.sin(time * o.floatSpeed) * o.floatAmplitude;
         mesh.rotation.x += o.rotationSpeedX;
         mesh.rotation.y += o.rotationSpeedY;
+
+        // Screen-space opacity — objects over the right text column fade to
+        // semi-transparent so they never compete with the heading/copy.
+        projVec.copy(mesh.position).project(camera);
+        const screenFrac = (projVec.x + 1) / 2; // 0 = left edge, 1 = right edge
+        const inRightZone = screenFrac > 0.48;
+        const opacityTarget = inRightZone ? (o.isRecessed ? 0.15 : 0.25) : 1.0;
+        material.transparent = true;
+        material.opacity = lerp(material.opacity, opacityTarget, 0.04);
+        // Turn transparent back off once fully opaque to avoid z-sorting cost.
+        if (!inRightZone && material.opacity > 0.99) {
+          material.transparent = false;
+          material.opacity = 1.0;
+        }
 
         // Proximity to mouse ray → scale + emissive boost.
         const near = raycaster.ray.distanceToPoint(mesh.position) < HOVER_DIST;
