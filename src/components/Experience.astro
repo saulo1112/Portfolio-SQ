@@ -383,25 +383,44 @@ const entries = [
     };
 
     // ── Scroll-driven orb position + per-entry focus opacity ──
+    // All positions use getBoundingClientRect() + window.scrollY so they share
+    // one consistent coordinate space (absolute document Y), avoiding the
+    // offsetTop-vs-section.offsetTop mismatch of the previous approach.
+
     let ticking = false;
 
-    const update = () => {
+    const updateOrb = () => {
       ticking = false;
 
-      const firstY = centerOf(entries[0]);
-      const lastY  = centerOf(entries[entries.length - 1]);
+      const first = entries[0];
+      const last  = entries[entries.length - 1];
 
-      const progress = Math.max(0, Math.min(1,
-        (window.scrollY - section.offsetTop + window.innerHeight * 0.5) /
-        section.offsetHeight
-      ));
+      // Absolute document Y of each entry's vertical center.
+      const firstAbsY = first.getBoundingClientRect().top + window.scrollY + first.offsetHeight / 2;
+      const lastAbsY  = last.getBoundingClientRect().top  + window.scrollY + last.offsetHeight  / 2;
+      const timelineHeight = lastAbsY - firstAbsY;
 
-      const orbY = firstY + (lastY - firstY) * progress;
-      orb.style.top = orbY + "px";
+      // Orb reaches the first entry when it crosses 60 % of the viewport,
+      // and the last entry when the last entry crosses that same line.
+      const viewportAnchor = window.innerHeight * 0.6;
+      const scrolled = window.scrollY + viewportAnchor - firstAbsY;
+      const progress = Math.max(0, Math.min(1, scrolled / timelineHeight));
+
+      // Convert progress back to a Y coordinate relative to .timeline for `top`.
+      const tRect     = timeline.getBoundingClientRect();
+      const firstRelY = first.getBoundingClientRect().top - tRect.top + first.offsetHeight / 2;
+      const lastRelY  = last.getBoundingClientRect().top  - tRect.top + last.offsetHeight  / 2;
+      const orbRelY   = firstRelY + (lastRelY - firstRelY) * progress;
+      orb.style.top   = orbRelY + "px";
+
+      // Absolute document Y the orb is currently sitting at (for opacity calc).
+      const orbAbsY = firstAbsY + Math.max(0, Math.min(scrolled, timelineHeight));
 
       for (let i = 0; i < entries.length; i++) {
-        const dist    = Math.abs(centerOf(entries[i]) - orbY);
-        const opacity = String(focusOpacity(dist));
+        const e       = entries[i];
+        const entryAbsY = e.getBoundingClientRect().top + window.scrollY + e.offsetHeight / 2;
+        const dist      = Math.abs(entryAbsY - orbAbsY);
+        const opacity   = String(focusOpacity(dist));
 
         if (titles[i])       titles[i]!.style.opacity       = opacity;
         if (companies[i])    companies[i]!.style.opacity    = opacity;
@@ -414,14 +433,15 @@ const entries = [
     };
 
     const onScroll = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      if (!ticking) { ticking = true; requestAnimationFrame(updateOrb); }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", () => { computeX(); onScroll(); });
+    window.addEventListener("resize", () => { computeX(); onScroll(); }, { passive: true });
 
     computeX();
-    update();
+    // Delay the first run so grid layout and font metrics are settled.
+    setTimeout(updateOrb, 100);
 
     // ── Cursor spotlight ──
     if (spotlight) {
