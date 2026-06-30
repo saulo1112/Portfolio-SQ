@@ -1,0 +1,215 @@
+---
+// Scroll-driven word reveal. Words are split at build time; accent words are
+// tagged here (robust against punctuation) so the runtime script only toggles
+// the `.active` state.
+const phrase =
+  "AI engineer and geospatial developer — I build systems that understand where things happen, why they happen, and what should happen next.";
+
+const accentBases = new Set([
+  "ai",
+  "geospatial",
+  "systems",
+  "understand",
+  "happen",
+]);
+
+const words = phrase.split(" ").map((text) => ({
+  text,
+  accent: accentBases.has(text.toLowerCase().replace(/[^a-z]/gi, "")),
+}));
+---
+
+<section id="phrase" class="phrase-section">
+  <div class="phrase-inner">
+    <!-- Left: brain -->
+    <div class="phrase-brain">
+      <div class="brain-spline">
+        <iframe
+          src="https://my.spline.design/particleaibrain-IpkY3fQsEGl1lDJ6nhX5xVcY/"
+          frameborder="0"
+          title="Particle AI brain — interactive 3D"></iframe>
+      </div>
+      <div class="phrase-brain-cover" aria-hidden="true"></div>
+    </div>
+
+    <!-- Right: scroll phrase -->
+    <div class="phrase-container">
+      <p class="phrase-text" id="phrase-text">
+        {
+          words.map((w) => (
+            <span class={w.accent ? "phrase-word accent" : "phrase-word"}>
+              {w.text}
+            </span>
+          ))
+        }
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .phrase-section {
+    border-top: 1px solid var(--color-border);
+    padding: 96px 0;
+  }
+
+  .phrase-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-inline: 40px;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  /* ---- Left: brain ---- */
+  .phrase-brain {
+    position: relative;
+    width: 100%;
+    min-width: 600px;
+    height: 500px;
+    min-height: 500px;
+    overflow: hidden;
+    background: #0f0f0f;
+    border-radius: 12px;
+  }
+
+  /* Fills .phrase-brain via absolute positioning — iframe is fully isolated
+     from the grid's track-sizing algorithm */
+  .brain-spline {
+    position: absolute;
+    inset: 0;
+  }
+
+  .brain-spline iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .phrase-brain-cover {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 220px;
+    height: 44px;
+    background: #121314;
+    z-index: 10;
+    pointer-events: none;
+    border-radius: 0 0 12px 0;
+  }
+
+  /* ---- Right: phrase ---- */
+  .phrase-container {
+    min-width: 0;
+    width: 100%;
+    padding-block: 24px;
+    padding-right: 48px;
+    overflow-wrap: break-word;
+  }
+
+  .phrase-text {
+    margin: 0;
+    max-width: 100%;
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+
+  .phrase-word {
+    --p-dim: rgba(255, 255, 255, 0.15);
+    display: inline;
+    margin-right: 0.25em;
+    color: var(--p-dim);
+    transition: color 0.4s ease;
+  }
+
+  :global(html:not(.dark)) .phrase-word {
+    --p-dim: rgba(15, 15, 15, 0.18);
+  }
+
+  .phrase-word.active {
+    color: var(--color-text-primary);
+  }
+
+  .phrase-word.accent.active {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 900px) {
+    .phrase-section {
+      padding: 64px 0;
+    }
+
+    .phrase-inner {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-inline: 24px;
+    }
+
+    .phrase-brain {
+      height: 340px;
+    }
+
+    .phrase-container {
+      padding-block: 0;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  // ---------------------------------------------------------------------------
+  // Scroll word reveal — words illuminate as the phrase scrolls through view.
+  // ---------------------------------------------------------------------------
+  const container = document.querySelector<HTMLElement>(".phrase-container");
+  const words = Array.from(
+    document.querySelectorAll<HTMLElement>(".phrase-word"),
+  );
+
+  if (container && words.length) {
+    let ticking = false;
+
+    const updateWords = () => {
+      ticking = false;
+      const rect = container.getBoundingClientRect();
+      const containerHeight = container.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      // Progress 0 → 1: starts when the container top reaches the viewport
+      // bottom, ends when the container bottom reaches the viewport top.
+      const start = windowHeight;
+      const end = -containerHeight;
+      const progress = 1 - (rect.top - end) / (start - end);
+      const clamped = Math.max(0, Math.min(1, progress));
+
+      // +2 adds a slight lead-in/lead-out so the first/last words aren't
+      // already lit when the phrase enters/leaves the viewport.
+      words.forEach((word, i) => {
+        const threshold = (i + 1) / (words.length + 2);
+        word.classList.toggle("active", clamped >= threshold);
+      });
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateWords);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    updateWords();
+
+    const cleanup = () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
+    window.addEventListener("beforeunload", cleanup, { once: true });
+  }
+</script>

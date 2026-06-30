@@ -1,87 +1,62 @@
 ---
-// Data-driven cards. Each icon is an inline SVG string (rendered via set:html);
-// stroke/fill come from CSS so the icons follow the theme accent.
-const cards = [
+// Liquid-glass capability cards — 2×2 grid. Data-driven for DRY markup.
+const services = [
   {
-    title: "Spatial ML & AI",
-    desc: "Geospatial ML pipelines, risk scoring models, and deep learning applied to Earth observation data.",
-    tags: ["scikit-learn", "Earth Engine", "PostGIS"],
-    icon: `<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>`,
+    num: "01",
+    tag: "AI / ML",
+    title: "AI & Deep Learning",
+    desc: "Machine learning pipelines, deep learning models, time series prediction, and intelligent systems built for real-world data and production environments.",
+    stack: ["Python", "scikit-learn", "TensorFlow", "PyTorch", "Pandas"],
   },
   {
-    title: "Geospatial APIs",
-    desc: "REST APIs with spatial queries, PostGIS indexing, and geographic data processing at scale.",
-    tags: ["FastAPI", "PostGIS", "Python"],
-    icon: `<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>`,
+    num: "02",
+    tag: "GIS",
+    title: "Geospatial Engineering",
+    desc: "End-to-end spatial data systems — from satellite imagery acquisition to PostGIS pipelines, H3 indexing, and interactive cartographic interfaces.",
+    stack: ["PostGIS", "Earth Engine", "H3", "Leaflet", "GDAL"],
   },
   {
-    title: "Interactive maps",
-    desc: "Web-based cartographic viewers, dashboards, and spatial data visualization.",
-    tags: ["Leaflet", "pydeck", "H3"],
-    icon: `<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2"/>`,
+    num: "03",
+    tag: "BACKEND",
+    title: "Backend & APIs",
+    desc: "REST APIs, spatial microservices, and data architecture built with FastAPI, Node.js, and PostgreSQL. Containerized, documented, and production-ready.",
+    stack: ["FastAPI", "Node.js", "Flask", "PostgreSQL", "Docker"],
   },
   {
-    title: "Data pipelines",
-    desc: "ETL automation and geodatabase design for environmental and spatial data at scale.",
-    tags: ["Python", "Docker", "GDAL"],
-    icon: `<path d="M4 6h16M4 12h16M4 18h10"/><polyline points="18 15 21 18 18 21"/>`,
-  },
-  {
-    title: "Backend development",
-    desc: "APIs, server logic, and database architecture for web applications and data services.",
-    tags: ["Node.js", "Flask", "FastAPI"],
-    icon: `<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`,
-  },
-  {
-    title: "Environmental analytics",
-    desc: "Water quality analysis, ecological modeling, and environmental data interpretation.",
-    tags: ["Python", "QGIS", "R"],
-    icon: `<path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/>`,
+    num: "04",
+    tag: "WEB",
+    title: "Web Development",
+    desc: "Interactive interfaces, data dashboards, and institutional websites. From design system to deployment, with performance and clarity as first principles.",
+    stack: ["JavaScript", "TypeScript", "Astro", "CSS", "HTML"],
   },
 ];
 ---
 
 <section id="services" class="services-section">
   <div class="inner">
-    <!-- ---- Left column: Spline particle AI brain ---- -->
-    <div class="spline-wrap">
-      <iframe
-        src="https://my.spline.design/particleaibrain-IpkY3fQsEGl1lDJ6nhX5xVcY/"
-        frameborder="0"
-        width="100%"
-        height="100%"
-        title="Particle AI brain — interactive 3D"
-        loading="lazy"></iframe>
-      <div class="spline-cover" aria-hidden="true"></div>
-    </div>
+    <p class="eyebrow">WHAT I DO</p>
+    <h2 class="heading">Services &amp; <span>capabilities</span></h2>
 
-    <!-- ---- Right column: heading + cards ---- -->
-    <div class="content">
-      <p class="eyebrow">WHAT I DO</p>
-      <h2 class="heading">Services &amp;<br /><span>capabilities</span></h2>
-
-      <div class="cards">
+    <div class="cards">
+        <div class="cards-glow" aria-hidden="true"></div>
         {
-          cards.map((card) => (
-            <article class="card">
-              <div class="card-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  set:html={card.icon}
-                />
+          services.map((s) => (
+            <article class="glass-card">
+              <div class="glass-noise" aria-hidden="true"></div>
+              <div class="card-top">
+                <span class="card-num">{s.num}</span>
+                <span class="card-cat">{s.tag}</span>
               </div>
-              <h3 class="card-title">{card.title}</h3>
-              <p class="card-desc">{card.desc}</p>
-              <div class="card-tags">
-                {card.tags.map((tag) => (
-                  <span class="card-tag">{tag}</span>
+              <h3 class="glass-title">{s.title}</h3>
+              <p class="glass-desc">{s.desc}</p>
+              <div class="glass-stack">
+                {s.stack.map((tech) => (
+                  <span class="stack-item">{tech}</span>
                 ))}
               </div>
             </article>
           ))
         }
-      </div>
     </div>
   </div>
 </section>
@@ -93,48 +68,11 @@ const cards = [
   }
 
   .inner {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding-inline: 40px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: center;
   }
 
-  /* ---- Left column: Spline embed ---- */
-  .spline-wrap {
-    position: relative;
-    height: 560px;
-    border-radius: 12px;
-    overflow: hidden;
-    /* Match the portfolio background so mix-blend-mode: lighten on the iframe
-       blends away the Spline scene's dark backdrop, leaving only the particles. */
-    background: var(--color-bg);
-  }
-
-  .spline-wrap iframe {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    mix-blend-mode: lighten;
-  }
-
-  /* Masks the Spline watermark in the bottom-right corner (fallback — with
-     mix-blend-mode: lighten the dark watermark already blends away). */
-  .spline-cover {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 260px;
-    height: 52px;
-    background: var(--color-bg);
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  /* ---- Right column ---- */
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 11px;
@@ -149,7 +87,7 @@ const cards = [
     font-weight: 500;
     line-height: 1.2;
     color: var(--color-text-primary);
-    margin-bottom: 28px;
+    margin-bottom: 40px;
   }
 
   .heading span {
@@ -157,121 +95,207 @@ const cards = [
     filter: brightness(1.3);
   }
 
-  /* ---- Cards grid ---- */
+  /* ---- Liquid-glass cards grid ---- */
   .cards {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, auto);
-    gap: 8px;
-    align-items: stretch;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 
-  .card {
-    height: 100%;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 14px;
+  /* Ambient accent glows behind the grid so the cards' backdrop-filter has
+     real color to refract — this is what reads as "liquid glass" rather than a
+     flat translucent panel. */
+  .cards-glow {
+    position: absolute;
+    inset: -40px;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(40px);
+    background:
+      radial-gradient(
+        circle at 20% 10%,
+        color-mix(in srgb, var(--color-accent) 14%, transparent),
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 80% 90%,
+        color-mix(in srgb, var(--color-accent) 12%, transparent),
+        transparent 45%
+      );
+  }
+
+  /* Per-card glass color variables — dark (default) premium white glass. */
+  .glass-card {
+    --g-bg: rgba(255, 255, 255, 0.03);
+    --g-bg-hover: rgba(255, 255, 255, 0.05);
+    --g-border: rgba(255, 255, 255, 0.08);
+    --g-inner: rgba(255, 255, 255, 0.05);
+    --g-text: #fafaf8;
+    --g-text-muted: rgba(255, 255, 255, 0.5);
+    --g-text-dim: rgba(255, 255, 255, 0.3);
+
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    position: relative;
+    gap: 16px;
+    min-height: 200px;
+    padding: 28px;
+    border-radius: 16px;
     overflow: hidden;
-    cursor: default;
-    transition:
-      border-color 0.3s ease,
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+    border: 1px solid var(--g-border);
+    background: var(--g-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  .card:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px
-      color-mix(in srgb, var(--color-accent) 12%, transparent);
+  /* Light-theme fallback — swap white translucency for dark, keep readable. */
+  :global(html:not(.dark)) .glass-card {
+    --g-bg: rgba(15, 15, 15, 0.04);
+    --g-bg-hover: rgba(15, 15, 15, 0.06);
+    --g-border: rgba(15, 15, 15, 0.1);
+    --g-inner: rgba(15, 15, 15, 0.04);
+    --g-text: var(--color-text-primary);
+    --g-text-muted: var(--color-text-secondary);
+    --g-text-dim: var(--color-text-muted);
   }
 
-  /* ---- Icon ---- */
-  .card-icon {
-    width: 32px;
-    height: 32px;
-    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-    border-radius: 8px;
+  /* Luminous inner border. */
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 15px;
+    border: 1px solid var(--g-inner);
+    pointer-events: none;
+  }
+
+  /* Top-edge light refraction line. */
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25) 40%,
+      color-mix(in srgb, var(--color-accent) 40%, transparent) 50%,
+      rgba(255, 255, 255, 0.25) 60%,
+      transparent
+    );
+  }
+
+  /* Micro-texture grain as its own overlay layer (NOT a filter on the card,
+     which would disable backdrop-filter and noise the text). */
+  .glass-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Keep real content above the noise layer. */
+  .card-top,
+  .glass-title,
+  .glass-desc,
+  .glass-stack {
+    position: relative;
+    z-index: 1;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-6px);
+    background: var(--g-bg-hover);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.4),
+      0 0 0 1px color-mix(in srgb, var(--color-accent) 15%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* ---- Card content ---- */
+  .card-top {
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
   }
 
-  .card:hover .card-icon {
-    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
-  }
-
-  .card-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: var(--color-accent);
-    fill: none;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* ---- Content ---- */
-  .card-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  .card-desc {
+  .card-num {
+    font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--color-text-muted);
-    line-height: 1.55;
+    letter-spacing: 0.06em;
+    color: var(--g-text-dim);
   }
 
-  .card-tags {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-
-  .card-tag {
+  .card-cat {
+    margin-left: auto;
     font-family: var(--font-mono);
     font-size: 10px;
     color: var(--color-accent);
-    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-    padding: 2px 7px;
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    padding: 3px 8px;
     border-radius: 4px;
-    transition:
-      background 0.3s ease,
-      color 0.3s ease;
   }
 
-  /* Keyword illumination on hover. */
-  .card:hover .card-tag {
-    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
-    color: color-mix(in srgb, var(--color-accent), white 30%);
+  .glass-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--g-text);
   }
 
+  .glass-desc {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--g-text-muted);
+  }
+
+  .glass-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .stack-item {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--g-text-dim);
+    border: 1px solid var(--g-border);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* Tablet: 2 across. */
+  @media (max-width: 1100px) {
+    .cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Phone: single column. */
   @media (max-width: 768px) {
     .services-section {
       padding: 64px 0;
     }
 
-    .inner {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-
-    .spline-wrap {
-      display: none;
-    }
-
     .cards {
       grid-template-columns: 1fr;
-      grid-template-rows: auto;
+    }
+
+    .glass-card {
+      padding: 20px;
     }
   }
 </style>
