@@ -50,7 +50,7 @@ const words = phrase.split(" ").map((text) => ({
 <style>
   .phrase-section {
     border-top: 1px solid var(--color-border);
-    padding: 96px 0;
+    padding: 36px 0;
   }
 
   .phrase-inner {
@@ -91,11 +91,11 @@ const words = phrase.split(" ").map((text) => ({
 
   .phrase-brain-cover {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 220px;
+    bottom: 12;
+    left: 440;
+    width: 140px;
     height: 44px;
-    background: #121314;
+    background: #0F0F0F;
     z-index: 10;
     pointer-events: none;
     border-radius: 0 0 12px 0;
@@ -176,20 +176,16 @@ const words = phrase.split(" ").map((text) => ({
     const updateWords = () => {
       ticking = false;
       const rect = container.getBoundingClientRect();
-      const containerHeight = container.offsetHeight;
       const windowHeight = window.innerHeight;
 
-      // Progress 0 → 1: starts when the container top reaches the viewport
-      // bottom, ends when the container bottom reaches the viewport top.
-      const start = windowHeight;
-      const end = -containerHeight;
-      const progress = 1 - (rect.top - end) / (start - end);
+      const startTrigger = windowHeight * 0.75;
+      const endTrigger = windowHeight * 0.25;
+
+      const progress = (startTrigger - rect.top) / (startTrigger - endTrigger);
       const clamped = Math.max(0, Math.min(1, progress));
 
-      // +2 adds a slight lead-in/lead-out so the first/last words aren't
-      // already lit when the phrase enters/leaves the viewport.
       words.forEach((word, i) => {
-        const threshold = (i + 1) / (words.length + 2);
+        const threshold = i / (words.length - 1);
         word.classList.toggle("active", clamped >= threshold);
       });
     };

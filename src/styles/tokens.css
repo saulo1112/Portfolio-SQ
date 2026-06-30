@@ -21,8 +21,7 @@
 
   /* Typography */
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    "Liberation Mono", monospace;
+  --font-mono: 'Space Grotesk', monospace;
 
   /* Radii */
   --radius-control: 8px;

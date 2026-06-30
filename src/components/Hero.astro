@@ -163,6 +163,7 @@
     z-index: 1;
     background: transparent;
     mix-blend-mode: lighten;
+    pointer-events: none;
   }
 
   .spline-container iframe {
@@ -398,11 +399,14 @@
       requestAnimationFrame(frame);
     };
 
-    canvas.addEventListener("mousemove", (e) => {
+    const section = canvas.closest("section") as HTMLElement;
+    const target = section ?? canvas;
+
+    target.addEventListener("mousemove", (e) => {
       const rect = canvas.getBoundingClientRect();
       mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     });
-    canvas.addEventListener("mouseleave", () => { mouse = null; });
+    target.addEventListener("mouseleave", () => { mouse = null; });
 
     window.addEventListener("resize", resize);
 
