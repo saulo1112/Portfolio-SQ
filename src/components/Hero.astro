@@ -163,7 +163,10 @@
     z-index: 1;
     background: transparent;
     mix-blend-mode: lighten;
-    pointer-events: none;
+    /* pointer-events left as default (auto) so the iframe receives mouse
+       events and Spline's built-in head-tracking works. Canvas particle
+       reactivity in this area is handled via the iframe's
+       mouseenter/mouseleave listeners in the script below. */
   }
 
   .spline-container iframe {
@@ -219,6 +222,13 @@
     let h = 0;
     let dpr = 1;
     let mouse: { x: number; y: number } | null = null;
+    // True while the cursor is over the Spline robot iframe. Since the iframe
+    // is a separate browsing context, it does not dispatch bubbling mousemove
+    // events to this document, so we can't track the exact cursor position
+    // there. When true we skip repulsion entirely (as if the mouse left the
+    // canvas) so particles drift smoothly back to their idle state instead of
+    // freezing on a stale repulsion point.
+    let isMouseOverRobot = false;
 
     type Particle = {
       x: number;
@@ -290,6 +300,10 @@
       ctx.clearRect(0, 0, w, h);
       const now = performance.now();
 
+      // While the cursor is over the robot iframe we can't read its position,
+      // so treat the mouse as absent — repulsion fades out gracefully.
+      const activeMouse = isMouseOverRobot ? null : mouse;
+
       // ---- Per-particle update ----
       for (const p of particles) {
 
@@ -312,9 +326,9 @@
         }
 
         // Mouse interaction.
-        if (mouse) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
+        if (activeMouse) {
+          const dx = p.x - activeMouse.x;
+          const dy = p.y - activeMouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < KILL_RADIUS && dist > 0) {
@@ -366,15 +380,15 @@
       }
 
       // ---- Draw mouse-to-particle lines (live particles only) ----
-      if (mouse) {
+      if (activeMouse) {
         for (const p of particles) {
           if (p.dead) continue;
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
+          const dx = p.x - activeMouse.x;
+          const dy = p.y - activeMouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MOUSE_LINE_DIST) {
             ctx.beginPath();
-            ctx.moveTo(mouse.x, mouse.y);
+            ctx.moveTo(activeMouse.x, activeMouse.y);
             ctx.lineTo(p.x, p.y);
             ctx.strokeStyle = COLOR;
             ctx.globalAlpha = (1 - dist / MOUSE_LINE_DIST) * 0.6 * (p.opacity / p.baseOpacity);
@@ -407,6 +421,15 @@
       mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     });
     target.addEventListener("mouseleave", () => { mouse = null; });
+
+    // The Spline robot iframe swallows mousemove internally (separate browsing
+    // context), so mark when the cursor is over it and let the animation loop
+    // pause repulsion. mouseenter/mouseleave DO fire on the iframe element.
+    const robotIframe = section?.querySelector(".spline-container iframe");
+    if (robotIframe) {
+      robotIframe.addEventListener("mouseenter", () => { isMouseOverRobot = true; });
+      robotIframe.addEventListener("mouseleave", () => { isMouseOverRobot = false; });
+    }
 
     window.addEventListener("resize", resize);
 
