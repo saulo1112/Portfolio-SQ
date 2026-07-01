@@ -159,9 +159,11 @@ const rows: Chip[][] = [
   /* --s is the single scale knob: 1 on desktop, 0.85 on mobile. Every chip
      dimension that should shrink references it via calc(), so the ~15% mobile
      reduction is one declaration rather than per-row overrides. */
+
+     /*Upper margin -> padding*/
   .stack-section {
     --s: 1;
-    padding: 96px 0;
+    padding: 72px 0;
     border-top: 1px solid var(--color-border);
   }
 
@@ -188,8 +190,7 @@ const rows: Chip[][] = [
     font-weight: 500;
     line-height: 1.2;
     color: var(--color-text-primary);
-    /* +24px breathing room between heading and the pyramid. */
-    margin-bottom: 72px;
+    margin-bottom: 48px;
   }
 
   .heading span {
@@ -215,12 +216,12 @@ const rows: Chip[][] = [
 
   /* Per-row base sizing. Scalable values (icon / padding / fonts / inner gap)
      are read through calc(* var(--s)); radius, row gap and row margin are fixed. */
-  .row-1 { --icon: 36px; --pad-y: 18px; --pad-x: 26px; --name-fs: 16px; --name-w: 600; --ctx-fs: 11px; --chip-gap: 11px; --radius: 12px; --row-gap: 20px; --row-mb: 48px; }
-  .row-2 { --icon: 30px; --pad-y: 15px; --pad-x: 22px; --name-fs: 14px; --name-w: 500; --ctx-fs: 11px; --chip-gap: 10px; --radius: 11px; --row-gap: 17px; --row-mb: 38px; }
-  .row-3 { --icon: 27px; --pad-y: 13px; --pad-x: 20px; --name-fs: 13px; --name-w: 500; --ctx-fs: 10px; --chip-gap: 9px;  --radius: 10px; --row-gap: 14px; --row-mb: 34px; }
-  .row-4 { --icon: 22px; --pad-y: 11px; --pad-x: 17px; --name-fs: 12px; --name-w: 500; --chip-gap: 8px;  --radius: 9px;  --row-gap: 12px; --row-mb: 26px; }
-  .row-5 { --icon: 20px; --pad-y: 9px;  --pad-x: 15px; --name-fs: 12px; --name-w: 400; --chip-gap: 7px;  --radius: 7px;  --row-gap: 10px; --row-mb: 20px; }
-  .row-6 { --icon: 17px; --pad-y: 7px;  --pad-x: 13px; --name-fs: 11px; --name-w: 400; --chip-gap: 6px;  --radius: 6px;  --row-gap: 8px;  --row-mb: 0; }
+  .row-1 { --icon: 40px; --pad-y: 18px; --pad-x: 26px; --name-fs: 16px; --name-w: 600; --ctx-fs: 11px; --chip-gap: 11px; --radius: 12px; --row-gap: 20px; --row-mb: 48px; }
+  .row-2 { --icon: 34px; --pad-y: 15px; --pad-x: 22px; --name-fs: 14px; --name-w: 500; --ctx-fs: 11px; --chip-gap: 10px; --radius: 11px; --row-gap: 17px; --row-mb: 38px; }
+  .row-3 { --icon: 31px; --pad-y: 13px; --pad-x: 20px; --name-fs: 13px; --name-w: 500; --ctx-fs: 10px; --chip-gap: 9px;  --radius: 10px; --row-gap: 14px; --row-mb: 34px; }
+  .row-4 { --icon: 26px; --pad-y: 11px; --pad-x: 17px; --name-fs: 12px; --name-w: 500; --chip-gap: 8px;  --radius: 9px;  --row-gap: 12px; --row-mb: 26px; }
+  .row-5 { --icon: 24px; --pad-y: 9px;  --pad-x: 15px; --name-fs: 12px; --name-w: 400; --chip-gap: 7px;  --radius: 7px;  --row-gap: 10px; --row-mb: 20px; }
+  .row-6 { --icon: 21px; --pad-y: 7px;  --pad-x: 13px; --name-fs: 11px; --name-w: 400; --chip-gap: 6px;  --radius: 6px;  --row-gap: 8px;  --row-mb: 0; }
 
   /* ---- Chip — liquid glass, matching Services.astro cards ---- */
   .chip {
@@ -231,9 +232,8 @@ const rows: Chip[][] = [
     --g-inner: rgba(255, 255, 255, 0.05);
 
     position: relative;
-    /* Contain every child/pseudo effect (::after refraction line, backdrop
-       halo, icon) to the chip's own rectangle so nothing bleeds onto neighbors,
-       and give each chip its own stacking context. */
+    /* Clip the ::after refraction line and the absolutely-positioned icon to the
+       chip's rounded rectangle; own stacking context keeps the pseudo layers local. */
     overflow: hidden;
     isolation: isolate;
     display: inline-flex;
@@ -242,9 +242,12 @@ const rows: Chip[][] = [
     padding: calc(var(--pad-y) * var(--s)) calc(var(--pad-x) * var(--s));
     border-radius: var(--radius);
     border: 1px solid var(--g-border);
+    /* Solid translucent fill — NOT backdrop-filter. A live blur here samples
+       pixels outside the chip's own box, so on hover (when --g-bg lightens) the
+       sampled halo bled into neighboring chips. Empirically confirmed: disabling
+       backdrop-filter eliminates the bleed. The glass read is carried by this
+       tint plus the ::before/::after edge lines. */
     background: var(--g-bg);
-    backdrop-filter: blur(7px) saturate(180%);
-    -webkit-backdrop-filter: blur(7px) saturate(180%);
     transition: all 0.25s ease;
   }
 
