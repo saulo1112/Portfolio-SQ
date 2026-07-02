@@ -1,5 +1,10 @@
 # saulo.dev — Portfolio
 
+To do's:
+
+- Create the thumbnails for project section
+- Start drafting the content for each section 
+
 Personal portfolio for Saulo Quiñones, Software Engineer & GIS Specialist.  
 Built with Astro 7 — static output, zero CSS/JS frameworks, vanilla everything.
 
