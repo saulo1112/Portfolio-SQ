@@ -1,0 +1,171 @@
+---
+const links = [
+  { label: "Work", href: "#work" },
+  { label: "Stack", href: "#stack" },
+  { label: "Experience", href: "#experience" },
+  { label: "Contact", href: "#contact" },
+];
+
+const email = "saulo.q1112@gmail.com";
+const github = "https://github.com/saulo1112";
+const linkedin =
+  "https://www.linkedin.com/in/saulo-qui%C3%B1ones-g%C3%B3ngora-304680262/";
+---
+
+<footer class="footer">
+  <div class="inner">
+    <div class="top">
+      <p class="headline">
+        Always learning.<br />Always <span class="accent">building.</span>
+      </p>
+
+      <div class="col">
+        <p class="label">Quick links</p>
+        <nav class="pills" aria-label="Footer">
+          {links.map((l) => <a class="pill" href={l.href}>{l.label}</a>)}
+        </nav>
+      </div>
+
+      <div class="col col-right">
+        <p class="label">Contact</p>
+        <div class="contact-links">
+          <a href={`mailto:${email}`}>{email}</a>
+          <a href={github} target="_blank" rel="noopener">GitHub ↗</a>
+          <a href={linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="watermark" aria-hidden="true">SQ</div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 96px 48px 60px;
+  }
+
+  /* ---- Top row ---- */
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 40px;
+  }
+
+  .headline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+
+  .headline .accent {
+    color: var(--color-accent);
+  }
+
+  .label {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--color-text-primary);
+    margin-bottom: 20px;
+  }
+
+  /* Quick-link pills — same treatment as the "View all work" pill. */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 220px; /* forces the 2x2 wrap */
+  }
+
+  .pill {
+    border: 1px solid var(--color-border);
+    border-radius: 99px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .pill:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .col-right {
+    text-align: right;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .contact-links a {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .contact-links a:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- Watermark ---- */
+  .watermark {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(180px, 22vw, 340px);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    opacity: 0.04;
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: -0.18em; /* bleeds past the edge; footer clips it */
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 768px) {
+    .inner {
+      padding: 64px 24px 48px;
+    }
+
+    .top {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 40px;
+    }
+
+    .col-right {
+      text-align: left;
+    }
+
+    .contact-links {
+      align-items: flex-start;
+    }
+
+    .watermark {
+      font-size: clamp(100px, 30vw, 180px);
+      text-align: center;
+    }
+  }
+</style>
