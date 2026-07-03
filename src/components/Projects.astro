@@ -1,49 +1,77 @@
 ---
+import eudrVideo from "../Assets/Videos/EUDR Hero Animation.mp4";
+import fudambientVideo from "../Assets/Videos/Fudambient.mp4";
+import physicalRecoveryVideo from "../Assets/Videos/App Physical Recovery.mp4";
+import optiCoderVideo from "../Assets/Videos/OptiCoder Hero.mp4";
+
 const featured = [
   {
     title: "EUDR Forest Risk Assessment",
-    subtitle: "Geospatial ML · FastAPI · PostGIS",
+    tags: ["GIS", "Machine learning", "FastAPI"],
+    problem:
+      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance — using only open satellite data?",
+    stack: "Python · PostGIS · Earth Engine · scikit-learn · Docker",
     github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
-    placeholder: "[screenshot: EUDR dashboard]",
-    cardClass: "c-eudr",
+    caseStudy: "/projects/eudr-risk-assessment",
+    video: eudrVideo,
+    accent: "#1D9E75",
   },
   {
-    title: "Retail Site Selection Engine",
-    subtitle: "Spatial ML · H3 · FastAPI · Streamlit",
-    github: "https://github.com/saulo1112/Site_selection_engine",
-    placeholder: "[screenshot: H3 map]",
-    cardClass: "c-site",
+    title: "Fudambient",
+    tags: ["Web", "Client work"],
+    problem:
+      "Designing and building the institutional website for an environmental NGO — from information architecture to launch.",
+    stack: "HTML · CSS · JavaScript",
+    github: "https://github.com/saulo1112/Fudambient-Page",
+    caseStudy: null,
+    video: fudambientVideo,
+    accent: "#3B82F6",
+  },
+  {
+    title: "App Physical Recovery",
+    tags: ["AI/ML", "Computer vision", "Deep learning"],
+    problem:
+      "Can two deep learning models — person detection and pose estimation — turn a phone camera into a physiotherapy coach?",
+    stack: "PyTorch · HuggingFace · gRPC · Streamlit · Docker",
+    // TODO: update with saulo1112 fork URL
+    github: "#",
+    caseStudy: null,
+    video: physicalRecoveryVideo,
+    accent: "#8B5CF6",
+  },
+  {
+    title: "OptiCoder",
+    tags: ["Mobile", "React Native"],
+    problem: "TODO: one-line problem statement — what does this app solve?",
+    stack: "React Native · TypeScript · Expo",
+    github: "https://github.com/saulo1112/PDproject",
+    caseStudy: null,
+    video: optiCoderVideo,
+    accent: "#F59E0B",
   },
 ];
 
 const small = [
   {
+    title: "Site Selection Engine",
+    tags: ["GIS", "Spatial ML"],
+    github: "https://github.com/saulo1112/Site_selection_engine",
+  },
+  {
     title: "RioCauca Baseline",
-    subtitle: "GIS · Python",
-    github: "https://github.com/saulo1112",
-    placeholder: "[screenshot: RioCauca]",
-    cardClass: "c-rio",
+    tags: ["GIS", "Python"],
+    github: "https://github.com/saulo1112/RioCauca_Baseline",
   },
   {
     title: "Cali River Biomonitoring",
-    subtitle: "GIS · Research",
-    github: "https://github.com/saulo1112",
-    placeholder: "[screenshot: biomonitoring]",
-    cardClass: "c-cali",
+    tags: ["GIS", "Research"],
+    github: "https://github.com/saulo1112/cali-river-biomonitoring",
   },
   {
-    title: "Fudambient",
-    subtitle: "Web · Client work",
-    github: "https://github.com/saulo1112",
-    placeholder: "[screenshot: Fudambient]",
-    cardClass: "c-fud",
-  },
-  {
-    title: "OptiCoder",
-    subtitle: "Mobile · React Native",
-    github: "https://github.com/saulo1112",
-    placeholder: "[screenshot: OptiCoder]",
-    cardClass: "c-opti",
+    title: "[TODO: biomedical prosthetics detection project]",
+    tags: ["AI/ML", "Computer vision"],
+    // TODO: add repo URL
+    github: "#",
   },
 ];
 ---
@@ -55,14 +83,20 @@ const small = [
       <a class="view-all" href="#work-grid">View all work ↗</a>
     </header>
 
-    <div class="featured grid-2">
+    <div class="featured">
       {
         featured.map((p) => (
-          <article class="item">
-            <div class={`shot ${p.cardClass}`}>
-              <div class="ph">
-                <span>{p.placeholder}</span>
-              </div>
+          <article class="item" style={`--accent: ${p.accent};`}>
+            <div class="media">
+              <video
+                src={p.video}
+                autoplay
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                style="object-fit: cover; width: 100%; height: 100%; display: block; border-radius: 0;"
+              />
               <a
                 class="gh"
                 href={p.github}
@@ -73,8 +107,23 @@ const small = [
                 GitHub ↗
               </a>
             </div>
-            <h3 class="title">{p.title}</h3>
-            <p class="subtitle">{p.subtitle}</p>
+            <div class="info">
+              <div class="tags">
+                {p.tags.slice(0, 2).map((t, i) => (
+                  <span class={i === 0 ? "tag tag-accent" : "tag"}>{t}</span>
+                ))}
+              </div>
+              <h3 class="title">{p.title}</h3>
+              <p class="problem">{p.problem}</p>
+              <p class="stack">{p.stack}</p>
+              {p.caseStudy && (
+                <div class="links">
+                  <a class="case" href={p.caseStudy}>
+                    Case study →
+                  </a>
+                </div>
+              )}
+            </div>
           </article>
         ))
       }
@@ -82,26 +131,25 @@ const small = [
 
     <h2 class="heading heading-sm" id="work-grid">Other<br />projects</h2>
 
-    <div class="small grid-2">
+    <div class="small">
       {
         small.map((p) => (
-          <article class="item item-sm">
-            <div class={`shot ${p.cardClass}`}>
-              <div class="ph">
-                <span>{p.placeholder}</span>
-              </div>
-              <a
-                class="gh"
-                href={p.github}
-                target="_blank"
-                rel="noopener"
-                aria-label={`GitHub: ${p.title}`}
-              >
-                GitHub ↗
-              </a>
+          <article class="item-sm">
+            <div class="tags">
+              {p.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
             </div>
-            <h3 class="title">{p.title}</h3>
-            <p class="subtitle">{p.subtitle}</p>
+            <h3 class="title-sm">{p.title}</h3>
+            <a
+              class="gh-link"
+              href={p.github}
+              target="_blank"
+              rel="noopener"
+              aria-label={`GitHub: ${p.title}`}
+            >
+              GitHub ↗
+            </a>
           </article>
         ))
       }
@@ -160,102 +208,53 @@ const small = [
     color: var(--color-accent);
   }
 
-  /* ---- Grids ---- */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
+  /* ---- Featured — 2x2 grid of vertical cards ---- */
   .featured {
-    gap: 28px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
     margin-top: 48px;
   }
 
-  .small {
-    gap: 24px;
-  }
-
   .item {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent),
+      0 20px 40px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  /* ---- Image card ---- */
-  .shot {
+  /* Glow intensifies on hover — no transform, to keep overflow:hidden clipping intact */
+  .item:hover {
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
+      0 0 32px color-mix(in srgb, var(--accent) 15%, transparent),
+      0 24px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ---- Media area (video on top) ---- */
+  .media {
     position: relative;
     width: 100%;
-    height: 380px;
-    border-radius: 16px;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
   }
 
-  .shot:hover {
-    transform: scale(1.02);
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
-  }
-
-  .item-sm .shot {
-    height: 240px;
-    border-radius: 12px;
-  }
-
-  /* Card gradients */
-  .c-eudr {
-    background: linear-gradient(145deg, #0d2818 0%, #0a1f12 60%, #061509 100%);
-  }
-  .c-site {
-    background: linear-gradient(145deg, #0d1520 0%, #091018 60%, #050a12 100%);
-  }
-  .c-rio {
-    background: linear-gradient(145deg, #1a1008 0%, #120b05 100%);
-  }
-  .c-cali {
-    background: linear-gradient(145deg, #080d1a 0%, #05091200 100%);
-  }
-  .c-fud {
-    background: linear-gradient(145deg, #0f0f18 0%, #0a0a12 100%);
-  }
-  .c-opti {
-    background: linear-gradient(145deg, #0f1a12 0%, #091209 100%);
-  }
-
-  /* Placeholder — centered dashed box */
-  .ph {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 80%;
-    height: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-  }
-
-  .ph span {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.2);
-  }
-
-  /* When a real screenshot is added later */
-  .shot img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* GitHub pill */
+  /* GitHub pill — only thing allowed on top of the video */
   .gh {
     display: inline-block;
     position: absolute;
-    bottom: 16px;
-    right: 16px;
+    bottom: 12px;
+    right: 12px;
+    z-index: 2;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -266,47 +265,151 @@ const small = [
     transition: background 0.2s ease, color 0.2s ease;
   }
 
-  .shot:hover .gh {
+  .item:hover .gh {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
   }
 
-  /* ---- Title + subtitle (below card) ---- */
-  .title {
+  /* ---- Content panel (solid, below video) ---- */
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: var(--color-surface);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .tag-accent {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    color: var(--accent);
+  }
+
+  .info .title {
     margin: 0;
-    font-size: 22px;
+    font-family: var(--font-sans);
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--color-text-primary);
   }
 
-  .subtitle {
+  .problem {
     margin: 0;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .stack {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .links {
+    margin-top: 2px;
+  }
+
+  .case {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: opacity 0.2s ease;
+  }
+
+  .case:hover {
+    opacity: 0.75;
+  }
+
+  /* ---- Secondary — text-only cards ---- */
+  .small {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .item-sm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .item-sm:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+  }
+
+  .item-sm .tag {
+    border-color: var(--color-border);
     color: var(--color-text-muted);
   }
 
-  .item-sm .title {
-    font-size: 16px;
+  .title-sm {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-primary);
   }
 
-  .item-sm .subtitle {
-    font-size: 13px;
+  .gh-link {
+    font-size: 12px;
+    color: var(--color-accent);
+    transition: opacity 0.2s ease;
   }
 
-  /* ---- Mobile ---- */
+  .gh-link:hover {
+    opacity: 0.75;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .featured {
+      grid-template-columns: 1fr;
+    }
+    .small {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
   @media (max-width: 768px) {
     .container {
       padding-inline: 24px;
     }
-    .grid-2 {
+  }
+
+  @media (max-width: 600px) {
+    .small {
       grid-template-columns: 1fr;
-    }
-    .shot {
-      height: 280px;
-    }
-    .item-sm .shot {
-      height: 180px;
     }
   }
 </style>
