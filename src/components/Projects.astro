@@ -15,6 +15,8 @@ const featured = [
     caseStudy: "/projects/eudr-risk-assessment",
     video: eudrVideo,
     accent: "#1D9E75",
+    fit: "fill",
+    zoom: 1,
   },
   {
     title: "Fudambient",
@@ -26,6 +28,8 @@ const featured = [
     caseStudy: null,
     video: fudambientVideo,
     accent: "#3B82F6",
+    fit: "contain",
+    zoom: 1.34,
   },
   {
     title: "App Physical Recovery",
@@ -95,7 +99,7 @@ const small = [
                 muted
                 playsinline
                 preload="metadata"
-                style="object-fit: cover; width: 100%; height: 100%; display: block; border-radius: 0;"
+                style={`object-fit: ${p.fit ?? "cover"}; width: 100%; height: 100%; display: block; border-radius: 0;${p.zoom && p.zoom !== 1 ? ` transform: scale(${p.zoom}); transform-origin: center;` : ""}`}
               />
               <a
                 class="gh"
@@ -164,7 +168,7 @@ const small = [
   }
 
   .container {
-    max-width: 1200px;
+    max-width: 1360px;
     margin: 0 auto;
     padding-inline: 48px;
   }
@@ -244,8 +248,9 @@ const small = [
   .media {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 11;
     overflow: hidden;
+    background: #000;
   }
 
   /* GitHub pill — only thing allowed on top of the video */
@@ -274,8 +279,8 @@ const small = [
   .info {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 20px;
+    gap: 8px;
+    padding: 18px;
     background: var(--color-surface);
   }
 
