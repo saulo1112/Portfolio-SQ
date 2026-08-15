@@ -244,15 +244,18 @@
 </style>
 
 <script>
-  import * as THREE from "three";
-  import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-
-  // ---------------------------------------------------------------------------
-  // Floating 3D geometric objects background (Three.js)
-  // ---------------------------------------------------------------------------
+  // Three.js is only downloaded when the About section enters the viewport,
+  // keeping it out of the initial JS bundle.
   const section = document.getElementById("about") as HTMLElement | null;
 
   if (section) {
+    const initThree = async () => {
+      const THREE = await import("three");
+      const { RoomEnvironment } = await import("three/addons/environments/RoomEnvironment.js");
+
+    // ---------------------------------------------------------------------------
+    // Floating 3D geometric objects background (Three.js)
+    // ---------------------------------------------------------------------------
     const ACCENT = 0x1d9e75;
     const rand = (min: number, max: number) =>
       min + Math.random() * (max - min);
@@ -599,6 +602,19 @@
     };
     document.addEventListener("astro:before-swap", cleanup, { once: true });
     window.addEventListener("beforeunload", cleanup, { once: true });
+  };
+
+  // Download and init Three.js only when the section nears the viewport.
+  const threeObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        threeObserver.disconnect();
+        initThree();
+      }
+    },
+    { rootMargin: "200px" },
+  );
+  threeObserver.observe(section);
   }
 
   // ---------------------------------------------------------------------------
