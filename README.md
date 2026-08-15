@@ -155,3 +155,7 @@ npm run preview   # serve the dist/ build locally
 - [ ] `src/pages/projects/*.astro` — same GitHub URL swap + fill in Results sections
 - [ ] `src/components/Experience.astro` — fill in real roles, companies, dates, bullets
 - [ ] Per-repo GitHub URLs in the four mini project cards
+
+---
+
+Deploy to Github pages.
