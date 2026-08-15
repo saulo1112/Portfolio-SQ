@@ -3,6 +3,8 @@ import eudrVideo from "../assets/Videos/EUDR Hero Animation.mp4";
 import fudambientVideo from "../assets/Videos/Fudambient.mp4";
 import physicalRecoveryVideo from "../assets/Videos/App Physical Recovery.mp4";
 import optiCoderVideo from "../assets/Videos/OptiCoder Hero.mp4";
+import ProjectLightbox from "./ProjectLightbox.astro";
+import { projectDetails } from "../data/projectDetails";
 
 const featured = [
   {
@@ -46,10 +48,12 @@ const featured = [
   {
     title: "OptiCoder",
     tags: ["Mobile", "React Native"],
-    problem: "TODO: one-line problem statement — what does this app solve?",
-    stack: "React Native · TypeScript · Expo",
+    problem:
+      "Code screenshots, UI mockups and architecture diagrams carry no alt text. Can a phone camera read them aloud for developers who can't see them?",
+    stack: "React Native · Expo · Gemini · Whisper",
     github: "https://github.com/saulo1112/PDproject",
     caseStudy: null,
+    slug: "opticoder",
     video: optiCoderVideo,
     accent: "#0057A4",
   },
@@ -70,8 +74,9 @@ const small = [
   },
   {
     title: "Cali River Biomonitoring",
-    tags: ["GIS", "Research"],
+    tags: ["Machine learning", "Research"],
     github: "https://github.com/saulo1112/cali-river-biomonitoring",
+    slug: "cali-river",
     accent: "#aaf683",
   },
   {
@@ -131,7 +136,19 @@ const small = [
                   </a>
                 </div>
               )}
+              {p.slug && (
+                <div class="links">
+                  <span class="case">Overview →</span>
+                </div>
+              )}
             </div>
+            {p.slug && (
+              <button
+                class="card-trigger"
+                data-lb-open={p.slug}
+                aria-label={`Open ${p.title} overview`}
+              />
+            )}
           </article>
         ))
       }
@@ -186,12 +203,26 @@ const small = [
                 ))}
               </div>
               <h3 class="title">{p.title}</h3>
+              {p.slug && <span class="case">Overview →</span>}
             </div>
+            {p.slug && (
+              <button
+                class="card-trigger"
+                data-lb-open={p.slug}
+                aria-label={`Open ${p.title} overview`}
+              />
+            )}
           </article>
         ))
       }
     </div>
   </div>
+
+  {
+    Object.entries(projectDetails).map(([slug, detail]) => (
+      <ProjectLightbox slug={slug} detail={detail} />
+    ))
+  }
 </section>
 
 <style>
@@ -286,13 +317,32 @@ const small = [
     background: #000;
   }
 
-  /* GitHub pill — only thing allowed on top of the video */
+  /* Invisible full-card button — makes the whole card open the lightbox while
+     leaving the GitHub pill (higher z-index) clickable on its own. */
+  .card-trigger {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    appearance: none;
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .card-trigger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 20px;
+  }
+
+  /* GitHub pill — sits above the card trigger so it stays independently clickable */
   .gh {
     display: inline-block;
     position: absolute;
     bottom: 12px;
     right: 12px;
-    z-index: 2;
+    z-index: 3;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -471,3 +521,41 @@ const small = [
     }
   }
 </style>
+
+<script>
+  // Project lightbox — native <dialog> gives focus trapping and Esc-to-close;
+  // we add open/close wiring, backdrop dismissal and scroll locking.
+  const openers = document.querySelectorAll<HTMLButtonElement>("[data-lb-open]");
+
+  const lockScroll = (locked: boolean) => {
+    document.body.style.overflow = locked ? "hidden" : "";
+  };
+
+  for (const btn of openers) {
+    btn.addEventListener("click", () => {
+      const slug = btn.dataset.lbOpen;
+      const dialog = document.getElementById(
+        `lb-${slug}`,
+      ) as HTMLDialogElement | null;
+      if (!dialog) return;
+      dialog.showModal();
+      lockScroll(true);
+      // Start at the top even if this dialog was scrolled on a previous open.
+      dialog.querySelector(".lb-body")?.scrollTo(0, 0);
+    });
+  }
+
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>("dialog.lb")) {
+    dialog.addEventListener("close", () => lockScroll(false));
+
+    dialog
+      .querySelector<HTMLButtonElement>("[data-lb-close]")
+      ?.addEventListener("click", () => dialog.close());
+
+    // Click outside the panel closes it. The dialog element itself fills the
+    // backdrop area, so a click landing on it (not on .lb-body) means outside.
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  }
+</script>

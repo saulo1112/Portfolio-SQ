@@ -1,0 +1,448 @@
+---
+import type { ProjectDetail } from "../data/projectDetails";
+
+interface Props {
+  slug: string;
+  detail: ProjectDetail;
+}
+
+const { slug, detail } = Astro.props;
+---
+
+<dialog class="lb" id={`lb-${slug}`} style={`--accent: ${detail.accent};`}>
+  <button class="lb-close" data-lb-close aria-label="Close overview">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M6 6l12 12M18 6L6 18"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <article class="lb-body">
+    <header class="lb-head">
+      <div class="lb-tags">
+        {
+          detail.tags.map((t, i) => (
+            <span class={i === 0 ? "lb-tag lb-tag-accent" : "lb-tag"}>{t}</span>
+          ))
+        }
+      </div>
+      <h2 class="lb-title">{detail.title}</h2>
+      <p class="lb-tagline">{detail.tagline}</p>
+
+      <div class="lb-actions">
+        <a class="lb-gh" href={detail.github} target="_blank" rel="noopener">
+          View on GitHub ↗
+        </a>
+        <span class="lb-stack">{detail.stack}</span>
+      </div>
+    </header>
+
+    <dl class="lb-facts">
+      {
+        detail.facts.map((f) => (
+          <div class="lb-fact">
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="lb-metrics">
+      {
+        detail.metrics.map((m) => (
+          <div class="lb-metric">
+            <span class="lb-metric-value">{m.value}</span>
+            <span class="lb-metric-label">{m.label}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="lb-sections">
+      {
+        detail.sections.map((s) => (
+          <section class="lb-section">
+            <h3 class="lb-h3">{s.heading}</h3>
+            {s.body.map((p) => (
+              <p class="lb-p">{p}</p>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="lb-gallery">
+      {
+        detail.figures.map((f) => (
+          <figure class="lb-fig" style={`--ratio: ${f.ratio ?? "16 / 10"};`}>
+            <div class="lb-fig-slot">
+              <svg class="lb-fig-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                />
+                <circle cx="8.5" cy="9" r="1.6" stroke="currentColor" stroke-width="1.4" />
+                <path
+                  d="M4 16.5L9 12l3.5 3.5L15 13l5 5"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <figcaption class="lb-fig-cap">{f.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </article>
+</dialog>
+
+<style>
+  .lb {
+    /* Sized as a panel, not a full page — the backdrop stays visible at the edges. */
+    width: min(1040px, 92vw);
+    max-height: 88vh;
+    /* The global reset (* { margin: 0 }) overrides the UA stylesheet's
+       `dialog { margin: auto }`, which is what centres a modal inside its
+       inset:0 box — without this the panel pins to the top-left corner. */
+    margin: auto;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--color-border));
+    border-radius: 20px;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent),
+      0 40px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .lb::backdrop {
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  /* Entry animation — only when opened, and skipped for reduced-motion users. */
+  .lb[open] {
+    animation: lb-in 0.22s ease-out;
+  }
+  .lb[open]::backdrop {
+    animation: lb-fade 0.22s ease-out;
+  }
+
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.985);
+    }
+  }
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lb[open],
+    .lb[open]::backdrop {
+      animation: none;
+    }
+  }
+
+  .lb-body {
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 48px clamp(24px, 5vw, 64px) 56px;
+    /* A hairline of accent across the top edge. */
+    background:
+      linear-gradient(
+          color-mix(in srgb, var(--accent) 7%, transparent),
+          transparent 320px
+        )
+        no-repeat;
+  }
+
+  /* ---- Close ---- */
+  .lb-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 99px;
+    border: 1px solid var(--color-border);
+    background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    backdrop-filter: blur(8px);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .lb-close:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-text-muted);
+  }
+
+  .lb-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ---- Header ---- */
+  .lb-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .lb-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .lb-tag-accent {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    color: var(--accent);
+  }
+
+  .lb-title {
+    margin: 18px 0 0;
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .lb-tagline {
+    margin: 16px 0 0;
+    max-width: 68ch;
+    font-size: clamp(16px, 1.7vw, 19px);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .lb-actions {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .lb-gh {
+    flex-shrink: 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: 99px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .lb-gh:hover {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-color: var(--accent);
+  }
+
+  .lb-stack {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Facts strip ---- */
+  .lb-facts {
+    margin: 40px 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .lb-fact {
+    padding: 16px 18px;
+    background: var(--color-bg);
+  }
+
+  .lb-fact dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+  }
+
+  .lb-fact dd {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: var(--color-text-primary);
+  }
+
+  /* ---- Metrics ---- */
+  .lb-metrics {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+  }
+
+  .lb-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 18px;
+    border-top: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .lb-metric-value {
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+
+  .lb-metric-label {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Narrative ---- */
+  .lb-sections {
+    margin-top: 56px;
+    display: grid;
+    gap: 40px;
+  }
+
+  .lb-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .lb-h3 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    padding-top: 5px;
+  }
+
+  .lb-p {
+    margin: 0 0 14px;
+    max-width: 72ch;
+    font-size: 15px;
+    line-height: 1.72;
+    color: var(--color-text-secondary);
+    text-align: justify;
+    /* Hyphenation keeps justified lines from opening up into rivers of
+       whitespace on narrow columns. */
+    hyphens: auto;
+    text-wrap: pretty;
+  }
+
+  .lb-p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- Gallery ---- */
+  .lb-gallery {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .lb-fig {
+    margin: 0;
+  }
+
+  .lb-fig-slot {
+    aspect-ratio: var(--ratio);
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--accent) 6%, var(--color-surface));
+    box-shadow: inset 0 0 0 1.5px
+      color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+
+  .lb-fig-icon {
+    width: 30px;
+    height: 30px;
+    color: color-mix(in srgb, var(--accent) 55%, var(--color-text-muted));
+    opacity: 0.65;
+  }
+
+  .lb-fig-cap {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  /* Portrait (phone screenshot) slots sit side by side at half width. */
+  .lb-fig[style*="9 / 16"] .lb-fig-slot {
+    max-width: 260px;
+    margin-inline: auto;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 860px) {
+    .lb-facts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .lb-section {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .lb-gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lb {
+      width: 100vw;
+      max-height: 100dvh;
+      border-radius: 0;
+      border: none;
+    }
+    .lb-body {
+      max-height: 100dvh;
+      padding: 56px 20px 40px;
+    }
+    .lb-facts {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
