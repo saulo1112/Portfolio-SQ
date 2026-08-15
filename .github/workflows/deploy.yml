@@ -26,15 +26,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: portfolio
 
       - name: Build
         run: npm run build
-        working-directory: portfolio
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: portfolio/dist
+          path: dist
 
   deploy:
     needs: build
