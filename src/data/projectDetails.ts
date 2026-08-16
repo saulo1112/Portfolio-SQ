@@ -3,7 +3,7 @@
 // To add a project: append an entry and set `slug` on its card in Projects.astro.
 
 export type Figure = {
-  /** Shown under the placeholder — describes the image to drop in. */
+  /** Shown under the placeholder , describes the image to drop in. */
   caption: string;
   /** Aspect ratio of the slot, e.g. "16 / 10" or "3 / 4". */
   ratio?: string;
@@ -21,16 +21,19 @@ export type ProjectDetail = {
   facts: { label: string; value: string }[];
   /** Headline numbers. Kept to 3–4 so they stay scannable. */
   metrics: { value: string; label: string }[];
-  /** Narrative body. Each section is a heading + one or two paragraphs. */
+  /** Narrative body. 2-3 sections, mostly one paragraph each. */
   sections: { heading: string; body: string[] }[];
-  figures: Figure[];
+  /** Exactly 3. figures[0] renders full-width as the hero , give it a landscape ratio
+      (16/10, 16/9, 3/2); a portrait hero leaves the row visually empty. figures[1] and
+      figures[2] sit side by side beneath it. */
+  figures: [Figure, Figure, Figure];
 };
 
 export const projectDetails: Record<string, ProjectDetail> = {
   opticoder: {
     title: "OptiCoder",
     tagline:
-      "A phone camera that reads code screenshots, UI mockups and architecture diagrams aloud — for developers who can't see them.",
+      "A phone camera that reads code screenshots, UI mockups and architecture diagrams aloud , for developers who can't see them.",
     tags: ["Mobile", "Multimodal AI", "Accessibility"],
     accent: "#0057A4",
     github: "https://github.com/saulo1112/PDproject",
@@ -51,44 +54,34 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "Software work runs on visual artifacts that carry no alt text: code screenshots pasted into a ticket, a UI mockup in a design review, an architecture diagram in a spec. For a developer with a visual impairment, these are dead ends — a screen reader has nothing to announce.",
-          "Assistive tooling has largely solved everyday scenes: navigation, object recognition, reading a label. Almost none of it targets the technical artifacts a professional developer actually needs, and the multimodal models that could interpret them live on desktops, in English, behind heavy compute.",
+          "Code screenshots, UI mockups, and architecture diagrams have no alt text. For developers with visual impairments, these technical artifacts simply don't exist for screen readers. Existing assistive tools handle everyday scenes well, but almost none targets the specific work a professional developer needs to do, and the multimodal models that could help live on expensive desktops, in English only, behind heavy compute.",
         ],
       },
       {
         heading: "The approach",
         body: [
-          "Point the phone at a screen. A vision-language model interprets the image semantically — reasoning about the code itself rather than trusting the IDE's red squiggles, which turned out to be a real source of false detections. The answer comes back spoken, capped at three sentences so it stays listenable.",
-          "From there it's conversational: ask a follow-up by voice, get a two-sentence answer. Capture, interpret, speak, ask again — one loop, no visual navigation required at any step.",
+          "Point the phone at a screen. A vision-language model interprets the image semantically, reasoning about the code itself rather than trusting the IDE's squiggles (which were a real source of false detections). The answer comes back spoken and capped at three sentences to stay listenable. Follow-up questions are two sentences each. One loop, no visual navigation required.",
+          "A lightweight client-cloud split keeps the app on mid-range phones where real users are. Expo and React Native handle capture and playback locally; Gemini does visual interpretation in the cloud, Whisper transcribes voice, and native text-to-speech delivers the response. Accessibility shaped every interface choice from the first commit: large touch targets, high contrast, haptic feedback, full screen-reader compatibility.",
         ],
       },
       {
-        heading: "Architecture",
+        heading: "The result",
         body: [
-          "A lightweight client–cloud split, chosen so it runs on the mid-range hardware the target users actually own rather than a flagship device. The Expo/React Native client handles capture, encoding and playback; the heavy models stay in the cloud behind APIs.",
-          "Google Gemini performs the visual interpretation, OpenAI Whisper transcribes voice input, and Expo's text-to-speech module delivers the response. Accessibility drove the interface from the first commit — large touch targets, high contrast, haptic confirmation, and full native screen-reader compatibility, not retrofitted afterward.",
-        ],
-      },
-      {
-        heading: "What the evaluation showed",
-        body: [
-          "Seven developers ran 106 classification instances against source-code screenshots spanning Python, JavaScript, PHP, Dart/Flutter, Java and Visual Basic 6.0, each labelled error-present or error-free. The system identified errors with 74.1% precision.",
-          "Satisfaction scored above 4.5/5 on contextual relevance, usability and interaction quality. Two of the system's prompt rules — ignore IDE annotations, and stay brief — were not designed up front; they were written in response to what the evaluation surfaced.",
+          "Seven developers tested it on 106 code screenshots in Python, JavaScript, PHP, Dart, Java, and VB6. The system identified errors with 74.1% precision. Satisfaction was above 4.5/5 on relevance, usability, and interaction quality. Two core prompt rules (ignore IDE annotations, stay brief) emerged from the evaluation itself, not from initial design.",
         ],
       },
     ],
     figures: [
-      { caption: "Capture screen — camera view with accessible controls", ratio: "9 / 16" },
-      { caption: "Conversational response with spoken output", ratio: "9 / 16" },
-      { caption: "Modular domain structure of the prototype", ratio: "16 / 10" },
-      { caption: "Conversational interaction loop", ratio: "16 / 10" },
+      { caption: "Capture screen with accessible controls", ratio: "9 / 16" },
+      { caption: "Conversational response interface", ratio: "16 / 10" },
+      { caption: "Architecture: client, cloud, and local playback", ratio: "16 / 10" },
     ],
   },
 
   "cali-river": {
     title: "Cali River Biomonitoring",
     tagline:
-      "Eighteen records, nine stations. Which ecological predictions can a dataset that small honestly support — and which ones only look like they work?",
+      "Eighteen records, nine stations. Which ecological predictions can a dataset that small honestly support , and which ones only look like they work?",
     tags: ["Machine learning", "Ecological modelling", "Research"],
     accent: "#aaf683",
     github: "https://github.com/saulo1112/cali-river-biomonitoring",
@@ -109,44 +102,33 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "Aquatic macroinvertebrates are the standard instrument for judging river health in Latin America, summarised through the BMWP/Col index. But biological sampling is slow and expensive next to automated physicochemical measurement, which raises an obvious question: can you predict biotic condition from the water chemistry a monitoring programme already collects?",
-          "Machine learning answers that question well — on thousands of sites. Regional environmental authorities typically hold fewer than thirty stations across one or two campaigns. The useful question isn't which algorithm wins on abundant data; it's which performs acceptably on scarce data, and how much of the reported performance is real.",
+          "Biotic sampling is slow and expensive, while automated water chemistry is routine. The question is obvious: can we predict river health from chemistry we're already collecting? Machine learning says yes, on thousands of sites. But regional authorities hold fewer than thirty stations across one or two campaigns. The useful question is not which algorithm wins on abundant data, but which performs honestly on scarce data, and how much reported performance is real.",
         ],
       },
       {
         heading: "Why validation was the actual subject",
         body: [
-          "At small sample sizes, data leakage stops being a technical footnote. Any pathway that lets information from the held-out observation reach the model beforehand inflates the reported score — and unlike most limitations, it's invisible from the metrics themselves. Surveys across seventeen scientific fields have found it reversing published conclusions.",
-          "So every data-dependent decision — predictor selection, membership-function estimation, hyperparameter tuning — was re-run inside each training fold, under a single nested leave-one-out protocol. The gap between the nested and the standard estimate becomes a measurement in its own right: how much apparent performance was borrowed from data the model shouldn't have seen.",
-        ],
-      },
-      {
-        heading: "The comparison",
-        body: [
-          "Five techniques spanning rule-based, parametric and kernel families were run head to head under that one protocol: Mamdani fuzzy inference, logistic regression, classification trees, negative binomial regression and ε-support vector regression.",
-          "Two prediction targets — the occurrence of two pollution-sensitive families (Perlidae and Helicopsychidae), and hydrobiological water quality through the BMWP/Col index.",
+          "At small sample sizes, data leakage becomes consequential. Any path that lets held-out information reach the model beforehand inflates the score invisibly. Surveys across seventeen fields found it reversing published conclusions. So every decision (predictor selection, hyperparameter tuning, even membership-function estimation) was re-run inside each training fold under a nested leave-one-out protocol. The gap between nested and standard metrics becomes its own measurement: how much performance was borrowed from data the model shouldn't have seen.",
         ],
       },
       {
         heading: "What came out of it",
         body: [
-          "No technique won across the board. ε-SVR was strongest on BMWP/Col, fuzzy inference on Perlidae, logistic regression on Helicopsychidae. Total hardness and flow held up as the most stable predictors across folds. Nesting the selection step cut κ by as much as 0.21 in five of six matched configurations — and left it untouched in the sixth, where selection was already stable, which locates exactly where validation design matters.",
-          "The BMWP/Col model fails at naming the exact value but succeeds at ranking stations worst to best — and ranking is the property a monitoring programme actually needs to decide where to sample next. The framework's output is a boundary: habitat suitability for a moderately represented taxon is tractable, five-class index prediction is not. That line was reached by measurement rather than assumption, which is what makes it portable to other data-scarce basins.",
+          "No technique won across the board. ε-SVR excelled at water quality, fuzzy inference at habitat suitability, logistic regression at another family. Nesting the selection step cut metrics by up to 0.21 in five configurations and left the sixth unchanged, which shows exactly where validation design matters. The water quality model can't name exact values but ranks stations well, and ranking is what a monitoring program needs to decide where to sample next. Habitat suitability for common taxa is tractable; five-class predictions are not. That boundary came from measurement, not assumption, which makes it portable to other data-scarce basins.",
         ],
       },
     ],
     figures: [
-      { caption: "Study area — monitoring stations across the basin", ratio: "16 / 10" },
+      { caption: "Study area with monitoring stations", ratio: "16 / 10" },
       { caption: "Nested leave-one-out cross-validation protocol", ratio: "16 / 10" },
-      { caption: "Model comparison across targets", ratio: "16 / 10" },
-      { caption: "Predictor stability across folds", ratio: "16 / 10" },
+      { caption: "Model performance: ε-SVR, fuzzy inference, logistic regression", ratio: "16 / 10" },
     ],
   },
 
   eudr: {
     title: "EUDR Forest Risk Assessment",
     tagline:
-      "Screening 4,170 real agricultural parcels for EU deforestation compliance — using nothing but open satellite data.",
+      "Screening 4,170 real agricultural parcels for EU deforestation compliance , using nothing but open satellite data.",
     tags: ["GIS", "Machine learning", "FastAPI"],
     accent: "#1D9E75",
     github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
@@ -167,37 +149,27 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "The EU Deforestation Regulation bars cocoa, coffee, palm oil, soy, rubber, cattle and wood products from the EU market if they trace back to land cleared after 31 December 2020. An operator sourcing from thousands of smallholder plots has to demonstrate that, plot by plot, before the compliance deadline.",
-          "Commercial platforms sell that screening. This pipeline reproduces the geospatial core of one end to end on open, official datasets alone — no proprietary imagery, no confidential supplier data, nothing that can't be audited by whoever receives the result.",
+          "The EU Deforestation Regulation requires producers to prove commodities don't trace to land cleared after 31 Dec 2020. An operator sourcing from thousands of smallholder plots needs to screen each one before the compliance deadline. Commercial platforms charge for this screening. This pipeline reproduces the geospatial core end-to-end using only open, official datasets , no proprietary imagery, no confidential data, nothing that can't be audited.",
         ],
       },
       {
-        heading: "Choosing the study area with data, not a pointer",
+        heading: "The model and the leakage that killed v1",
         body: [
-          "Picking a region by hand is the kind of decision that quietly determines a result, so it was made programmatically instead: threshold a cocoa-probability raster over Colombia's real administrative boundary, cluster the connected components at 1 km, take the largest cluster and buffer 20 km around its centroid.",
-          "The procedure returned Alto Sinú, on the Córdoba–Antioquia border — a documented agricultural frontier under active deforestation pressure. Vectorizing that surface at 10 m and filtering to 0.5–85 ha produced 4,170 parcels averaging 2.90 ha, which lands almost exactly on the ~3 ha reported for Colombian cocoa smallholders. The same four steps run unchanged over Côte d'Ivoire, Ghana, Indonesia, Ecuador or Peru.",
+          "Choosing the study area programmatically removed hand-picked bias: threshold a cocoa-probability raster, cluster connected pixels at 1 km, buffer 20 km around the largest cluster. The procedure returned Alto Sinú (an active deforestation frontier). Vectorizing at 10 m and filtering to 0.5–85 ha yielded 4,170 parcels averaging 2.90 ha, matching smallholder size reported for the region. Deforestation per parcel is the intersection of post-2021 forest loss with 2020 forest pixels: seventy parcels show measurable loss, six of them over half their area.",
+          "The first classifier achieved near-perfect precision, which was the signal of failure: it was encoding the label's own quantity. v2 used neighbourhood deforestation in a 200 m ring (honest, but weak: macro-F1 0.43). v3 added distance to nearest loss and multi-radius neighbourhood context, reframed as binary classification, and reached PR-AUC 0.846 with macro-F1 0.837. Masking the distance feature in a sensitivity check held at 0.812, so performance doesn't rest on one predictor.",
         ],
       },
       {
-        heading: "The model, and the leakage that killed the first version",
+        heading: "What it delivers",
         body: [
-          "Deforestation per parcel comes from intersecting annual forest-loss detections after 2021 with pixels classified as forest in 2020 — loss occurring strictly after the regulation's cutoff. Seventy parcels carry measurable post-2020 loss, six of them over half their area.",
-          "The first classifier scored near-perfect precision and recall, which was the tell: its features encoded the same quantity the label was derived from. v2 replaced them with the neighbourhood's deforestation in a 200 m ring excluding the parcel itself — honest, and underpowered at macro-F1 0.43. v3 added distance to the nearest recent loss and multi-radius neighbourhood context, reframed the target as binary, and reached PR-AUC 0.846 with macro-F1 0.837. A sensitivity check that masks the distance feature holds at 0.812, so the score isn't resting on one predictor.",
-        ],
-      },
-      {
-        heading: "What it actually delivers",
-        body: [
-          "The useful output isn't the 70 parcels already visible in the imagery — it's the ~4,100 currently clean ones ranked by the risk of becoming the next case. Parcel 3123 has zero deforestation of its own, sits 40 m from recent forest loss and shows 2.0% loss inside its 200 m ring; it tops the early-warning list precisely because nothing has happened there yet.",
-          "PostGIS holds the geometry and scores, FastAPI exposes parcels, aggregate statistics and the early-warning ranking, and a Leaflet dashboard renders it. The whole stack — database seeded with all 4,170 scored parcels, API, frontend — comes up from a single Docker Compose file. The score is framed throughout as a prioritisation aid: compliance under the regulation is zero-tolerance and binary, and a probabilistic ranking decides where to look first, never whether a parcel is clean.",
+          "The real output is the ~4,100 clean parcels ranked by context risk. Parcel 3123 has zero own deforestation, sits 40 m from recent loss, and shows 2% loss inside its 200 m ring: it ranks highest on the early-warning list precisely because nothing has happened there yet. PostGIS stores geometry and scores, FastAPI serves parcels and rankings, and Leaflet renders them. The whole stack (database, API, dashboard) boots from one Compose file. The score is presented as a prioritisation aid: compliance is binary and zero-tolerance; ranking decides where to look first, never whether a parcel is clean.",
         ],
       },
     ],
     figures: [
-      { caption: "Data-driven AOI selection — cocoa probability clusters over Colombia", ratio: "16 / 10" },
-      { caption: "Parcel map with post-2020 forest loss highlighted", ratio: "16 / 10" },
-      { caption: "Model iteration v1 → v3: features, framing and honest metrics", ratio: "16 / 10" },
-      { caption: "Early-warning dashboard — LOW-risk parcels ranked by context", ratio: "16 / 10" },
+      { caption: "Study area selection from cocoa-probability clusters", ratio: "16 / 10" },
+      { caption: "Early-warning dashboard , LOW-risk parcels ranked by context", ratio: "16 / 10" },
+      { caption: "Model v3 performance: PR-AUC 0.846, macro-F1 0.837", ratio: "16 / 10" },
     ],
   },
 
@@ -210,7 +182,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     github: "https://github.com/saulo1112/Fudambient-Page",
     stack: "HTML · CSS · JavaScript · Native ES modules · JSON i18n",
     facts: [
-      { label: "Client", value: "Fudambient — environmental NGO" },
+      { label: "Client", value: "Fudambient , environmental NGO" },
       { label: "Scope", value: "Architecture → design → launch" },
       { label: "Pages", value: "5 + contact" },
       { label: "Languages", value: "Spanish · English" },
@@ -224,37 +196,27 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The brief",
         body: [
-          "Fudambient works on urban greening, basic sanitation, landscape management and the restoration of land damaged by illegal mining — public-sector contracts across the Valle del Cauca, going back years. Their record existed as spreadsheets and Word documents; prospective partners had nothing to look at.",
-          "The job was the whole path from that raw material to a live site: deciding what a visitor needs to see and in what order, designing it, building it, and shipping something the foundation could keep using without a developer on retainer.",
+          "Fudambient works on urban greening, basic sanitation, environmental restoration, and mining-damage recovery across the Valle del Cauca. Twenty years of public-sector contracts existed as spreadsheets and Word docs, invisible to prospective partners. The job was end-to-end: deciding what to show and in what order, designing it, building it, and leaving something the foundation could operate without ongoing developer support.",
         ],
       },
       {
-        heading: "Information architecture",
+        heading: "From archive to site",
         body: [
-          "The contract archive drove the structure. Ten projects, each with a category, a location, a year and a plain-language description of what was done, sorted into five practice areas — urbanism, basic sanitation, environmental restoration, landscape management tools, and design and consultancy. That taxonomy became the site's spine.",
-          "Around it: a homepage that leads with what the foundation does rather than what it is, a mission and territory section, an achievements page carrying the timeline of how a project actually runs from community dialogue through to follow-up, and a services page. Every page shares one header, one navigation model and one type scale.",
+          "Ten projects sorted into five practice areas (urbanism, sanitation, restoration, landscape management, consultancy) became the site's skeleton. The homepage leads with what the foundation does, not what it is. A mission section, an achievements timeline showing how projects unfold from community dialogue through follow-up, and a services page complete the site. One header, one navigation model, one typographic scale throughout.",
+          "The client needed to own the site entirely, so it's native ES modules and plain CSS with no bundler or package.json to maintain. Project data lives in readable JavaScript arrays, not a CMS, making it a five-minute job to add next year's contract. Interaction (scroll-reactive header swapping to a floating glass pill, autoplaying project slider, lightbox for photos, timeline animations) is hand-written where it earns its place and degrades to plain HTML if scripts fail.",
         ],
       },
       {
-        heading: "Building it without a framework",
+        heading: "Bilingual at the core",
         body: [
-          "The client needed to be able to hand the site to anyone. So: native ES modules, plain stylesheets, no bundler, no package manifest to keep alive. Open a file, edit it, push it. The project data lives in readable JavaScript arrays rather than a CMS, which keeps adding next year's contract to a five-minute job.",
-          "Interaction is written by hand where it earns its place — a scroll-reactive header that swaps to a floating glass pill, an autoplaying project slider, a lightbox for project photography, and reveal-on-scroll animations on the achievements timeline. Everything degrades to readable HTML if a script fails.",
-        ],
-      },
-      {
-        heading: "Bilingual by construction",
-        body: [
-          "Half the foundation's potential partners read English. Rather than duplicating five pages, translation is a lookup: every translatable node carries a key, two JSON locale files hold the strings, and switching languages re-renders the DOM in place and remembers the choice.",
-          "Dynamic content — the slider, the timeline, the project cards — subscribes to a language-change event, so components that render after boot pick up the right locale instead of silently staying in Spanish. Adding a third language means adding one file.",
+          "Half the foundation's potential partners read English. Rather than duplicate five pages, every translatable node carries a key, two JSON files hold the strings, and switching languages re-renders the DOM in place and remembers the choice. Dynamic components (slider, timeline, project cards) subscribe to a language-change event so they pick up the right locale on render. Adding a third language means adding one file.",
         ],
       },
     ],
     figures: [
-      { caption: "Homepage hero — brand mark, video background, primary CTA", ratio: "16 / 10" },
-      { caption: "Projects page — filterable cards across five practice areas", ratio: "16 / 10" },
+      { caption: "Homepage with brand, video, and primary CTA", ratio: "16 / 10" },
+      { caption: "Projects page , five practice areas, filterable cards", ratio: "16 / 10" },
       { caption: "Achievements timeline with reveal-on-scroll animation", ratio: "16 / 10" },
-      { caption: "Language toggle — the same section rendered in ES and EN", ratio: "16 / 10" },
     ],
   },
 
@@ -281,44 +243,34 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "Physiotherapy works when the exercises are done correctly and done often, and most of them happen at home with nobody watching. The patient doesn't know whether the range of motion was enough; the therapist sees the result three weeks later, and only through self-report.",
-          "The gap is measurement. A phone camera already sees everything needed to judge a shoulder abduction — the question is whether the pipeline behind it can turn frames into a number the patient understands mid-session, not a batch report afterwards.",
+          "Physiotherapy works on correct, repeated exercise at home with nobody watching. The patient doesn't know if the range is enough; the therapist sees results three weeks later through self-report. The gap is real-time measurement. A phone camera already sees what's needed to judge a shoulder abduction , the question is whether the pipeline turns frames into a number the patient understands mid-session, not a batch report afterward.",
         ],
       },
       {
-        heading: "The pipeline",
+        heading: "The pipeline and architecture",
         body: [
-          "Each frame passes through five stages, each isolated in its own module: validate and normalise, detect people, estimate pose, compute the biomechanical angle, evaluate the repetition. RT-DETR finds the person and filters everything that isn't one; ViTPose-plus returns 17 COCO keypoints with confidence scores.",
-          "The grade comes from three of those points. The angle at the left shoulder — between the hip→shoulder and wrist→shoulder vectors — is the signal. A hysteresis pair of thresholds opens a repetition at 40° and closes it below 30°, which stops a trembling arm from registering twenty reps at the top of one. Each repetition scores its peak angle against 90°, and the session grade is their mean.",
+          "Each frame passes through five modules: validate, detect people, estimate pose, compute angle, evaluate repetition. RT-DETR finds persons and filters everything else; ViTPose-plus returns 17 COCO keypoints. The grade comes from three points: the left shoulder angle (hip-to-shoulder and wrist-to-shoulder vectors). A hysteresis pair of thresholds opens a rep at 40 degrees and closes it below 30, preventing tremor from registering twenty reps at the top of one. Each rep scores its peak angle against 90 degrees, and the session grade is their mean.",
+          "The Streamlit client never loads a model. It encodes frames and streams to a gRPC server, receiving keypoints and angle back. Protocol Buffers keep the per-frame payload small enough for live video. Both run as containers from a single image, with the entrypoint choosing the process. The frontend resolves the server through an environment variable, so the same build runs against localhost, a Compose network, or a remote host without recoding.",
         ],
       },
       {
-        heading: "Why the interface runs no inference",
+        heading: "Built like software, tested and deployed",
         body: [
-          "The Streamlit client never loads a model. It encodes frames and speaks to a gRPC server over a bidirectional stream, receiving keypoints and the computed angle back. Protocol Buffers keep the per-frame payload small enough for the round trip to stay inside a live video loop, which JSON over HTTP does not.",
-          "The split is what makes the system deployable. The two run as separate containers from a single image, with the entrypoint deciding which process starts; the frontend resolves the server through an environment variable, so the same build runs against localhost, a Compose network or a remote host without a code change.",
-        ],
-      },
-      {
-        heading: "Treated as software, not a notebook",
-        body: [
-          "MLflow tracks the experiments, so the choice of detector and pose estimator is traceable to recorded runs rather than remembered. Pre-commit hooks run Ruff and the full pytest suite before any commit lands, with model loading mocked so the tests execute in seconds instead of downloading gigabytes of weights.",
-          "CI runs on a self-hosted runner — the image is roughly 10 GB once PyTorch, Transformers and OpenCV are in, which shared runners won't build. Tests gate the build; the build pushes a tagged image; the image runs on a cloud VM serving the interface and the inference server on their own ports. A session ends with a generated PDF report: angle trace, repetitions detected, score per repetition, final grade.",
+          "MLflow tracks experiments, so detector and pose-estimator choices trace to recorded runs, not memory. Pre-commit hooks run Ruff and pytest with model loading mocked so tests finish in seconds. CI runs on a self-hosted runner (the image is roughly 10 GB once PyTorch and dependencies land). Tests gate the build, the build pushes a tagged image, and the image runs on a cloud VM serving both services on separate ports. A session ends with a PDF report: angle trace, repetitions detected, per-rep score, final grade.",
         ],
       },
     ],
     figures: [
-      { caption: "Live session — skeleton overlay with running angle and rep count", ratio: "16 / 10" },
-      { caption: "Modular architecture: Streamlit client, gRPC server, inference pipeline", ratio: "16 / 10" },
-      { caption: "Angle trace over a session, with repetition boundaries marked", ratio: "16 / 10" },
-      { caption: "Generated PDF session report", ratio: "3 / 4" },
+      { caption: "Live session , skeleton overlay with angle and rep count", ratio: "16 / 10" },
+      { caption: "Architecture: Streamlit client, gRPC server, inference pipeline", ratio: "16 / 10" },
+      { caption: "Session report: angle trace and repetition boundaries", ratio: "16 / 10" },
     ],
   },
 
   "site-selection": {
     title: "Site Selection Engine",
     tagline:
-      "Where should a discount chain open next in Bogotá? A hexagon-level ranking built from open data — and validated so that neighbours can't grade each other.",
+      "Where should a discount chain open next in Bogotá? A hexagon-level ranking built from open data , and validated so that neighbours can't grade each other.",
     tags: ["GIS", "Spatial ML", "FastAPI"],
     accent: "#1D9E75",
     github: "https://github.com/saulo1112/Site_selection_engine",
@@ -338,44 +290,34 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "Retail expansion decisions get made on instinct and a walk around the block. The inputs that would make them defensible — where the competition already is, what complements it, who lives there, how reachable the corner is — are all publicly available and almost never assembled.",
-          "The target output isn't a prediction of revenue, which nobody can validate without the chain's books. It's a ranked shortlist: given a business sector and a city, which locations most resemble the places this format already succeeds in, ordered so a site team knows where to spend its next site visit.",
+          "Expansion decisions get made on instinct and a walk around the block. The defensible inputs (where competition is, what complements it, who lives there, road reachability) are all public but almost never assembled. The output is not revenue prediction (nobody can validate that without the chain's books). It's a ranked shortlist: given a sector and a city, which locations resemble places this format already succeeds in, ordered so a site team knows where to visit next.",
         ],
       },
       {
-        heading: "Choosing the city, and the unit of analysis",
+        heading: "Three models, each answering the last",
         body: [
-          "Four candidate cities were checked against the data before one was picked. Bogotá was the only one of the four with enough presence from the reference brand — 129 stores — to leave viable positive examples after spatial separation, and the only one with documented socioeconomic stratification coverage.",
-          "The grid is H3 hexagons rather than administrative districts. Districts vary wildly in size and shape, so a per-district score compares things that aren't comparable; uniform hexagons make density a real quantity and make every candidate the same size. OpenStreetMap supplies competitors, complementary points of interest and the road network; census data supplies population and dwellings, apportioned to hexagons by block.",
+          "Four candidate cities were tested first; Bogotá was the only one with enough reference-brand presence (129 stores) to leave viable positives after spatial separation. The unit of analysis is H3 hexagons, not administrative districts (which vary wildly in size). OpenStreetMap supplies competition and points of interest, census data supplies population and dwellings, apportioned by block.",
+          "v1 was a weighted multi-criteria score with no learning: NDCG@200 0.80. v2 learns a look-alike classifier predicting reference-store presence, ranked by probability: ROC-AUC 0.78, NDCG@200 0.83. But on a random split, which is wrong for spatial data where neighbours share almost everything. v3 re-runs v2 under spatial cross-validation (folds are hexagon blocks with one-ring buffer removed). Expected: performance drops. Actual: ROC-AUC 0.79, NDCG@200 0.84, statistically unchanged. The signal generalises across space, not memorising neighbourhoods. That finding contradicts the prior, which makes it worth keeping. The real leakage was a feature counting the reference brand as its own competitor, found and removed.",
         ],
       },
       {
-        heading: "Three models, each answering the previous one's objection",
+        heading: "Serving decoupled from the database",
         body: [
-          "v1 is a weighted multi-criteria score with no learning in it at all — interpretable, arguable, and the baseline everything else has to beat. It reaches NDCG@200 of 0.80.",
-          "v2 learns instead: a look-alike classifier predicting whether a hexagon hosts a reference store, ranked by that probability. ROC-AUC 0.78, NDCG@200 0.83 — but on a random train/test split, which is the wrong split for spatial data. A hexagon and its neighbour share almost everything, so a random split lets the model grade a cell it has effectively already seen.",
-        ],
-      },
-      {
-        heading: "The result that didn't confirm the hypothesis",
-        body: [
-          "v3 re-runs the same model under spatial cross-validation: folds are blocks of coarse hexagons with a one-ring buffer removed between train and test, so no test cell touches a training cell. The expectation was that performance would drop and the earlier numbers would turn out to be borrowed.",
-          "It didn't. ROC-AUC 0.79, NDCG@200 0.84 — statistically unchanged, meaning the signal generalises across space rather than memorising neighbourhoods. That is a finding worth keeping precisely because it contradicts the prior; the leakage that was real was a different one, a feature counting the reference brand as its own competitor, found and removed. Serving is decoupled from the database: FastAPI reads versioned artefacts and a Streamlit map renders the ranked hexagons, falling back to local files if the API is unreachable.",
+          "FastAPI reads versioned artefacts and a Streamlit map renders ranked hexagons, falling back to local files if the API is unreachable.",
         ],
       },
     ],
     figures: [
-      { caption: "H3 hexagon grid over Bogotá with reference store locations", ratio: "16 / 10" },
-      { caption: "Spatial cross-validation folds — blocks with buffer rings excluded", ratio: "16 / 10" },
-      { caption: "Ranking metrics across v1, v2 and v3", ratio: "16 / 10" },
-      { caption: "Streamlit dashboard — top-ranked hexagons and their feature profile", ratio: "16 / 10" },
+      { caption: "H3 hexagon grid over Bogotá with store locations", ratio: "16 / 10" },
+      { caption: "Spatial cross-validation folds with buffer rings", ratio: "16 / 10" },
+      { caption: "Ranking metrics: v1 (NDCG 0.80), v2 (0.83), v3 (0.84)", ratio: "16 / 10" },
     ],
   },
 
   "riocauca-baseline": {
     title: "RioCauca Baseline",
     tagline:
-      "Sugarcane hectares split by river segment, computed in the browser — and made to close at exactly 100%.",
+      "Sugarcane hectares split by river segment, computed in the browser , and made to close at exactly 100%.",
     tags: ["GIS", "Geospatial analysis", "JavaScript"],
     accent: "#4EA8DE",
     github: "https://github.com/saulo1112/RioCauca_Baseline",
@@ -395,44 +337,34 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "The problem",
         body: [
-          "A biological-corridor diagnosis needs to know how much of the diffuse load reaching the Cauca River comes from where. Land-use figures existed, but per river: one number for the whole of the Bolo, one for the whole of the Fraile. Monitoring stations sit at points along those rivers, so a per-river total can't be matched against a measurement taken at any one of them.",
-          "What the analysis needed was land use per segment — the stretch between two consecutive stations — so a water-quality reading has a catchment attached to it rather than a river name.",
+          "A biological-corridor diagnosis needs to know how much diffuse load reaching the Cauca River comes from where. Land-use figures existed per river (one number for the whole Bolo, one for the whole Fraile). Monitoring stations sit at points along those rivers, so a per-river total cannot be matched against a measurement taken at any one station. The analysis needed land use per segment, the stretch between two consecutive stations.",
         ],
       },
       {
-        heading: "Cutting a river into segments",
+        heading: "Cutting and validating",
         body: [
-          "Each cut becomes two half-plane polygons, and segments come out of boolean operations on those — not from reassembling the buffer's outline by hand, which loses the meanders that stick out. The half-plane's reach is derived from the buffer's bounding box; a fixed small value silently drops area in exactly the places that matter.",
-          "Segments are ordered and named by projecting both cuts and stations onto the river axis, so the order they were drawn in cannot change the result, and flow direction is inferred from which end of the axis lies closer to the Cauca. Cuts placed at a station generate the exact perpendicular to the channel axis, which makes them reproducible rather than hand-traced.",
+          "Each cut becomes two half-plane polygons, and segments come out of boolean operations on those, not from reassembling the buffer outline by hand which loses meanders. Segments are ordered by projecting both cuts and stations onto the river axis so draw order cannot change the result. Cuts placed at a station generate the exact perpendicular to the channel axis, making them reproducible.",
+          "Areas are computed geodesically on the WGS84 ellipsoid, not planimetrically over degrees (the standard way to be quietly wrong by a few percent at this latitude). The table carries both raw geodesic area and area normalised by the ratio to the published river total, so segments sum to what's published. The measured gap was 0.26%. Every panel reports geometric closure: segments divided by river total must read 100.0000%. Verified on the Bolo (3,794.85 ha) and Fraile (4,990.00 ha), matching official figures exactly.",
         ],
       },
       {
-        heading: "Making the numbers close",
+        heading: "What it revealed",
         body: [
-          "Areas are computed geodesically on the WGS84 ellipsoid — never planimetrically over degrees, which is the standard way to be quietly wrong by a few percent at this latitude. Because the official figures were computed in a local projected system, the table carries both the raw geodesic area and one normalised by the ratio to the published river total, so segments sum to the number already in circulation. The measured gap was −0.26%.",
-          "Every panel reports geometric closure: segments divided by river total, which must read 100.0000%. It's a self-check that catches a badly oriented cut immediately instead of at review. Verified on the Bolo and the Fraile — 3,794.85 ha and 4,990.00 ha, matching the official figures to the hundredth, closure exact on both.",
-        ],
-      },
-      {
-        heading: "What the segmentation revealed",
-        body: [
-          "Forty-six segments across fifteen tributaries, 25,092 hectares of sugarcane, plus a full land-use breakdown — cane, pasture, forest, urban — over the same partition, shared between both analyses by construction rather than by coincidence.",
-          "Two results are about monitoring rather than geometry. The 700 m buffer only covers the flat valley floor: on two rivers it reaches barely 30% of the channel axis, which is why a mountain station can't serve as a cut point and why only 48 of 74 stations are usable. And two rivers hold a single station inside the cane zone, so they admit no intermediate cut at all — 2,722 hectares that cannot be disaggregated with the current network. That's a gap in coverage, and naming it is more useful than interpolating over it. The whole viewer is static: MapLibre and Turf from a CDN, native ES modules, no bundler, auto-deployed on push.",
+          "Forty-six segments across fifteen tributaries, 25,092 hectares of sugarcane, plus full land-use breakdown over the same partition. The 700 m buffer only covers the flat valley floor, so on two rivers it reaches barely 30% of the channel axis and only 48 of 74 stations are usable. Two rivers hold a single station inside the cane zone, so they admit no intermediate cut. That's a gap in coverage worth naming honestly. The whole viewer is static: MapLibre and Turf from a CDN, native ES modules, no bundler, auto-deployed on push.",
         ],
       },
     ],
     figures: [
-      { caption: "Interactive viewer — tributaries, 700 m buffer and monitoring stations", ratio: "16 / 10" },
-      { caption: "Segment cutting tool with live area table and closure check", ratio: "16 / 10" },
-      { caption: "Sugarcane hectares by segment across the fifteen tributaries", ratio: "16 / 10" },
-      { caption: "Longitudinal water-quality profile along the corridor", ratio: "16 / 10" },
+      { caption: "Interactive viewer with tributaries and monitoring stations", ratio: "16 / 10" },
+      { caption: "Segment cutting tool with closure check", ratio: "16 / 10" },
+      { caption: "Sugarcane hectares across fifteen tributaries", ratio: "16 / 10" },
     ],
   },
 
   "ortho-vision": {
     title: "Ortho Vision AI",
     tagline:
-      "A radiograph segmentation model taken out of the notebook — exported, proven equivalent, served torch-free, and put on a phone.",
+      "A radiograph segmentation model exported to ONNX, proven equivalent to its source, served without PyTorch, and deployed to mobile.",
     tags: ["Computer vision", "MLOps", "Mobile"],
     accent: "#ffb3c1",
     github: "https://github.com/saulo1112/Ortho-Vision-AI",
@@ -450,39 +382,29 @@ export const projectDetails: Record<string, ProjectDetail> = {
     ],
     sections: [
       {
-        heading: "The problem",
+        heading: "The distance from research to deployed",
         body: [
-          "A segmentation model that identifies intramedullary nails, screwed plates and joint prostheses in radiographs is a genuinely useful thing — and a checkpoint file is not a usable one. The distance between a trained model and something a person can point at an X-ray is the entire project.",
-          "This takes a research segmentation model through that distance: export, validation, serving, client. It is a portfolio and teaching artefact, not a medical device, and nothing about it is intended for clinical use.",
+          "A segmentation model identifying intramedullary nails, screwed plates, and joint prostheses in radiographs is useful. A checkpoint file is not. The distance between a trained model and something a person can point at an X-ray is the entire project. This work takes a research model through that distance: export, validation, serving, client. It's a portfolio and teaching artefact, not a medical device, intended for educational use only.",
         ],
       },
       {
-        heading: "Not trusting the export",
+        heading: "Certified equivalence and lightweight serving",
         body: [
-          "Converting a checkpoint to ONNX is a one-line call, and the reason it deserves more than that is that it usually appears to work. Silent drift in post-processing, a resize with different corner handling, an activation folded differently — all of it produces plausible masks that aren't the same masks.",
-          "So the conversion is certified rather than assumed. A script runs both pipelines over the entire held-out test set and reports mask-to-mask agreement and the per-class metric delta. Agreement holds at 0.996 or better across all three classes and IoU and Dice differ by no more than 0.001. The report is generated by the script, not written by hand, so it can be regenerated whenever the model changes.",
+          "Converting a checkpoint to ONNX appears to work, but silent drift happens in post-processing, resize handling, activations. So the conversion is certified rather than assumed. A script runs both pipelines over the held-out test set and reports mask-to-mask agreement and per-class metric delta. Agreement holds at 0.996 or better across all three classes. IoU and Dice differ by no more than 0.001.",
+          "YOLOv8-seg's post-processing (non-maximum suppression, mask assembly, polygonisation) is reimplemented in numpy and OpenCV, leaving ONNX Runtime as the only inference dependency. The result is a roughly 300 MB image that runs on a free-tier 512 MB instance at about 450 ms per image on CPU. Polygons come back in normalised coordinates so the client scales them to any display. The Expo app probes candidate backends in order (configured URL, USB tunnel, dev host) and uses the first that answers.",
         ],
       },
       {
-        heading: "Serving without PyTorch",
+        heading: "Mobile delivery",
         body: [
-          "Shipping the training framework to production would have meant a multi-gigabyte image and an instance to match. Instead, YOLOv8-seg's post-processing — non-maximum suppression, prototype mask assembly, polygonisation — is reimplemented in numpy and OpenCV, leaving ONNX Runtime as the only inference dependency.",
-          "The result is a roughly 300 MB image that runs on a free-tier 512 MB instance at about 450 ms per image on CPU. Polygons come back in normalised coordinates, so the client scales them to any display without renegotiating the contract. EXIF orientation is corrected on the way in, image size is bounded, no-detection is a valid response rather than an error, and every prediction carries the model version that produced it.",
-        ],
-      },
-      {
-        heading: "The client",
-        body: [
-          "An Expo app takes the photo or picks the radiograph, posts it, and draws the returned polygons as SVG overlays on top of the image with per-instance confidence — vector masks, so they stay sharp at any screen density and any zoom level.",
-          "The app resolves its backend by probing candidates in order and using the first that answers a health check: a configured deployment URL, then a USB tunnel, then the development host on the local network. That removes the single most common friction in testing a mobile client against a local server. The medical disclaimer is part of the interface, not a line in the README.",
+          "The app takes a photo or picks a radiograph, posts it, and draws returned polygons as SVG overlays with per-instance confidence. Vector masks stay sharp at any screen density and zoom level. The medical disclaimer is part of the interface, not a README note.",
         ],
       },
     ],
     figures: [
-      { caption: "Mobile app — segmentation masks overlaid with per-instance confidence", ratio: "9 / 16" },
-      { caption: "ONNX parity report — per-class IoU, Dice and mask agreement", ratio: "16 / 10" },
-      { caption: "Architecture: Expo client, FastAPI inference server, persistence", ratio: "16 / 10" },
-      { caption: "The three implant classes segmented side by side", ratio: "16 / 10" },
+      { caption: "Mobile app with segmentation overlay and confidence", ratio: "9 / 16" },
+      { caption: "ONNX parity report showing per-class agreement", ratio: "16 / 10" },
+      { caption: "Architecture: Expo, gRPC server, inference pipeline", ratio: "16 / 10" },
     ],
   },
 };

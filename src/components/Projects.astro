@@ -71,7 +71,7 @@ const small = [
     accent: "#1D9E75",
   },
   {
-    title: "RioCauca Baseline",
+    title: "Cauca River Baseline",
     tags: ["GIS", "Python"],
     github: "https://github.com/saulo1112/RioCauca_Baseline",
     slug: "riocauca-baseline",
@@ -134,13 +134,6 @@ const small = [
               <h3 class="title">{p.title}</h3>
               <p class="problem">{p.problem}</p>
               <p class="stack">{p.stack}</p>
-              {p.caseStudy && (
-                <div class="links">
-                  <a class="case" href={p.caseStudy}>
-                    Case study →
-                  </a>
-                </div>
-              )}
               {p.slug && (
                 <div class="links">
                   <span class="case">Overview →</span>
@@ -431,7 +424,9 @@ const small = [
   .case {
     font-size: 13px;
     font-weight: 500;
-    color: var(--color-accent);
+    /* Matches each card's own --accent (set inline per project) rather than
+       the global theme accent, so the link color follows the card's tint. */
+    color: var(--accent);
     transition: opacity 0.2s ease;
   }
 

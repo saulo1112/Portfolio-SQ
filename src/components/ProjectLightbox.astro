@@ -332,43 +332,37 @@ const { slug, detail } = Astro.props;
 
   /* ---- Narrative ---- */
   .lb-sections {
-    margin-top: 56px;
+    margin-top: 48px;
     display: grid;
-    gap: 40px;
+    gap: 32px;
   }
 
   .lb-section {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 32px;
-    align-items: start;
+    display: block;
   }
 
   .lb-h3 {
-    margin: 0;
+    margin: 0 0 10px;
     font-family: var(--font-mono);
     font-size: 12px;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
-    padding-top: 5px;
   }
 
   .lb-p {
-    margin: 0 0 14px;
-    max-width: 72ch;
+    margin: 0;
     font-size: 15px;
     line-height: 1.72;
     color: var(--color-text-secondary);
     text-align: justify;
-    /* Hyphenation keeps justified lines from opening up into rivers of
-       whitespace on narrow columns. */
     hyphens: auto;
     text-wrap: pretty;
   }
 
-  .lb-p:last-child {
-    margin-bottom: 0;
+  .lb-p + .lb-p {
+    margin-top: 14px;
   }
 
   /* ---- Gallery ---- */
@@ -383,6 +377,10 @@ const { slug, detail } = Astro.props;
 
   .lb-fig {
     margin: 0;
+  }
+
+  .lb-fig:first-child {
+    grid-column: 1 / -1;
   }
 
   .lb-fig-slot {
@@ -411,7 +409,7 @@ const { slug, detail } = Astro.props;
   }
 
   /* Portrait (phone screenshot) slots sit side by side at half width. */
-  .lb-fig[style*="9 / 16"] .lb-fig-slot {
+  .lb-fig:not(:first-child)[style*="9 / 16"] .lb-fig-slot {
     max-width: 260px;
     margin-inline: auto;
   }
@@ -420,10 +418,6 @@ const { slug, detail } = Astro.props;
   @media (max-width: 860px) {
     .lb-facts {
       grid-template-columns: repeat(2, 1fr);
-    }
-    .lb-section {
-      grid-template-columns: 1fr;
-      gap: 14px;
     }
     .lb-gallery {
       grid-template-columns: 1fr;
