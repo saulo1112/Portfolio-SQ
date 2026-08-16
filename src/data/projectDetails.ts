@@ -38,6 +38,12 @@ import ortho3 from "../assets/Images/Projects/Ortho Vision AI/(3).jpeg";
 import ortho4 from "../assets/Images/Projects/Ortho Vision AI/(4).jpeg";
 import ortho5 from "../assets/Images/Projects/Ortho Vision AI/(5).jpeg";
 
+// Dedicated card thumbnails, framed to the card's 16:11 box so nothing crops.
+import caliRiverCard from "../assets/Images/Thumbnails/Cali River Biomonitoring.png";
+import siteSelectionCard from "../assets/Images/Thumbnails/Site Selection Engine.png";
+import caucaBaselineCard from "../assets/Images/Thumbnails/Cauca River Baseline.png";
+import orthoVisionCard from "../assets/Images/Thumbnails/Ortho Vision AI.png";
+
 export type Figure = {
   src: ImageMetadata;
   caption: string;
@@ -120,7 +126,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tagline:
       "Eighteen records, nine stations. Which ecological predictions can a dataset that small honestly support , and which ones only look like they work?",
     tags: ["Machine learning", "Ecological modelling", "Research"],
-    accent: "#aaf683",
+    accent: "#4ac4c9",
     github: "https://github.com/saulo1112/cali-river-biomonitoring",
     stack:
       "Python · scikit-learn · Fuzzy inference · ε-SVR · Nested LOOCV",
@@ -159,6 +165,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { src: caliRiver1, caption: "Choosing a prediction target: two bioindicator families or the BMWP/Col index" },
       { src: caliRiver2, caption: "ε-SVR result reported as a range and an approximate class, not a point value" },
     ],
+    card: caliRiverCard,
   },
 
   eudr: {
@@ -308,7 +315,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tagline:
       "Where should a discount chain open next in Bogotá? A hexagon-level ranking built from open data , and validated so that neighbours can't grade each other.",
     tags: ["GIS", "Spatial ML", "FastAPI"],
-    accent: "#1D9E75",
+    accent: "#db4637",
     github: "https://github.com/saulo1112/Site_selection_engine",
     stack: "Python · PostGIS · H3 · scikit-learn · FastAPI · Streamlit · Docker",
     facts: [
@@ -347,6 +354,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { src: siteSelection1, caption: "Top hexagon scored 0.997 of 3,589 candidates, with the reasons beside it" },
       { src: siteSelection2, caption: "Zoomed to the shortlist: ranks 2–6 and per-hexagon scores" },
     ],
+    card: siteSelectionCard,
   },
 
   "riocauca-baseline": {
@@ -354,7 +362,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tagline:
       "Sugarcane hectares split by river segment, computed in the browser , and made to close at exactly 100%.",
     tags: ["GIS", "Geospatial analysis", "JavaScript"],
-    accent: "#4EA8DE",
+    accent: "#debfc5",
     github: "https://github.com/saulo1112/RioCauca_Baseline",
     stack: "MapLibre GL JS · Turf.js · Python · GitHub Pages",
     facts: [
@@ -395,6 +403,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { src: cauca3, caption: "Flow profile along the corridor" },
       { src: cauca4, caption: "Sugarcane hectares attributed to each tributary" },
     ],
+    card: caucaBaselineCard,
   },
 
   "ortho-vision": {
@@ -402,7 +411,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tagline:
       "A radiograph segmentation model exported to ONNX, proven equivalent to its source, served without PyTorch, and deployed to mobile.",
     tags: ["Computer vision", "MLOps", "Mobile"],
-    accent: "#ffb3c1",
+    accent: "#f1f5f7",
     github: "https://github.com/saulo1112/Ortho-Vision-AI",
     stack: "YOLOv8-seg · ONNX Runtime · FastAPI · OpenCV · Expo · Docker",
     facts: [
@@ -444,6 +453,6 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { src: ortho4, caption: "Screwed plate segmented at 87% confidence" },
       { src: ortho5, caption: "History of past analyses with per-class confidence" },
     ],
-    card: ortho2,
+    card: orthoVisionCard,
   },
 };
