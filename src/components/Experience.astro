@@ -1,11 +1,6 @@
 ---
-const entries = [
-  { date: "NOW",          title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
-  { date: "2025",         title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
-  { date: "Sep–Dec 2025", title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
-  { date: "Mar–Sep 2025", title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
-  { date: "2024",         title: "TODO — fill later", company: "TODO — fill later", description: "TODO — fill later" },
-];
+import { experienceEntries, educationFootnote } from "../data/experience";
+const entries = experienceEntries;
 ---
 
 <section id="experience" class="experience-section">
@@ -33,24 +28,47 @@ const entries = [
         <div class="timeline-entry" data-index={i}>
           {/* Col 1 — role + company, right-aligned */}
           <div class="timeline-left">
-            <p class="entry-title" data-date={entry.date}>{entry.title}</p>
+            <p class="entry-title" data-date={entry.dateRange}>{entry.title}</p>
             <p class="entry-company">{entry.company}</p>
           </div>
-          {/* Col 2 — large date label, right-aligned flush to the line */}
+          {/* Col 2 — large year label + smaller date-range sub-label, right-aligned flush to the line */}
           <div class="timeline-date">
-            <p class="node-date">{entry.date}</p>
+            <p class="node-date">{entry.yearLabel}</p>
+            <p class="node-date-range">{entry.dateRange}</p>
           </div>
           {/* Col 3 — 2 px column; the dot sits here, line runs through it */}
           <div class="timeline-node">
             <div class="node-dot"></div>
           </div>
-          {/* Col 4 — description, left-aligned */}
+          {/* Col 4 — bullets + stack chips, left-aligned */}
           <div class="timeline-right">
-            <p class="entry-description">{entry.description}</p>
+            <ul class="entry-bullets">
+              {entry.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+            {entry.stack && (
+              <div class="entry-stack">
+                {entry.stack.map((s) => (
+                  <span class="stack-chip">{s}</span>
+                ))}
+              </div>
+            )}
+            {entry.link && (
+              <a class="entry-link" href={entry.link.href} target="_blank" rel="noopener">
+                {entry.link.label}
+              </a>
+            )}
           </div>
         </div>
       ))}
     </div>
+
+    <p class="experience-footnote">
+      {educationFootnote.map((line) => (
+        <span class="footnote-line">{line}</span>
+      ))}
+    </p>
 
   </div>
 </section>
@@ -262,12 +280,93 @@ const entries = [
     line-height: 1.1;
   }
 
-  .entry-description {
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-    max-width: 320px;
+  .node-date-range {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
     transition: opacity 0.25s ease;
+  }
+
+  /* ── Bullets — short fragments, not paragraphs, so the column stays light ── */
+  .entry-bullets {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    max-width: 340px;
+    transition: opacity 0.25s ease;
+  }
+
+  .entry-bullets li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+  }
+
+  .entry-bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0.6;
+  }
+
+  .entry-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 340px;
+    margin-top: 12px;
+    transition: opacity 0.25s ease;
+  }
+
+  .stack-chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .entry-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: opacity 0.2s ease;
+  }
+
+  .entry-link:hover {
+    opacity: 0.75;
+  }
+
+  /* ── Education footnote — compact, sits below the timeline, not part of it ── */
+  .experience-footnote {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .footnote-line {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
   }
 
   /* ── Static node dot ── */
@@ -329,8 +428,13 @@ const entries = [
       transform: translate(-50%, -50%);
     }
 
-    .entry-description {
+    .entry-bullets,
+    .entry-stack {
       max-width: 100%;
+    }
+
+    .experience-footnote {
+      margin-top: 40px;
     }
   }
 </style>
@@ -350,8 +454,10 @@ const entries = [
     const dots         = entries.map(e => e.querySelector<HTMLElement>(".node-dot"));
     const titles       = entries.map(e => e.querySelector<HTMLElement>(".entry-title"));
     const companies    = entries.map(e => e.querySelector<HTMLElement>(".entry-company"));
-    const dates        = entries.map(e => e.querySelector<HTMLElement>(".node-date"));
-    const descriptions = entries.map(e => e.querySelector<HTMLElement>(".entry-description"));
+    // Whole columns, so the year+range pair and the bullets+stack+link group
+    // each fade as one unit rather than needing a selector per sub-element.
+    const dates        = entries.map(e => e.querySelector<HTMLElement>(".timeline-date"));
+    const descriptions = entries.map(e => e.querySelector<HTMLElement>(".timeline-right"));
 
     // Center Y of an entry relative to .timeline.
     const centerOf = (el: HTMLElement) => el.offsetTop + el.offsetHeight / 2;
