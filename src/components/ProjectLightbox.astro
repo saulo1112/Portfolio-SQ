@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import type { ProjectDetail } from "../data/projectDetails";
 
 interface Props {
@@ -7,6 +8,38 @@ interface Props {
 }
 
 const { slug, detail } = Astro.props;
+
+// The gallery layout follows each screenshot's own proportions instead of a
+// declared ratio, so nothing is ever cropped or stretched:
+//   wide  - desktop capture (~2.11 here), takes a full row
+//   tall  - phone capture (~0.45), sits alongside its siblings
+//   doc   - a page-shaped export (~0.77), centred at a readable width
+// The 0.6 cut-off sits in the gap between a phone screen and a printed page;
+// anything squarer than that is a document and must not be shrunk to phone width.
+const modeOf = (w: number, h: number) => {
+  const r = w / h;
+  if (r >= 1.5) return "wide";
+  if (r <= 0.6) return "tall";
+  return "doc";
+};
+
+// Four phone screenshots read better as 2x2 than as a row of 3 with an orphan.
+const tallCount = detail.figures.filter(
+  (f) => modeOf(f.src.width, f.src.height) === "tall",
+).length;
+const tallPerRow = tallCount === 4 ? 2 : 3;
+
+const SIZES = {
+  wide: "(max-width: 860px) 92vw, 912px",
+  tall: "(max-width: 700px) 45vw, 288px",
+  doc: "(max-width: 620px) 90vw, 520px",
+} as const;
+
+const WIDTHS = {
+  wide: [640, 912, 1400],
+  tall: [300, 600],
+  doc: [520, 1040],
+} as const;
 ---
 
 <dialog class="lb" id={`lb-${slug}`} style={`--accent: ${detail.accent};`}>
@@ -75,34 +108,24 @@ const { slug, detail } = Astro.props;
       }
     </div>
 
-    <div class="lb-gallery">
+    <div class="lb-gallery" style={`--tall-per-row: ${tallPerRow};`}>
       {
-        detail.figures.map((f) => (
-          <figure class="lb-fig" style={`--ratio: ${f.ratio ?? "16 / 10"};`}>
-            <div class="lb-fig-slot">
-              <svg class="lb-fig-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect
-                  x="3"
-                  y="3"
-                  width="18"
-                  height="18"
-                  rx="2"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                />
-                <circle cx="8.5" cy="9" r="1.6" stroke="currentColor" stroke-width="1.4" />
-                <path
-                  d="M4 16.5L9 12l3.5 3.5L15 13l5 5"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </div>
-            <figcaption class="lb-fig-cap">{f.caption}</figcaption>
-          </figure>
-        ))
+        detail.figures.map((f) => {
+          const mode = modeOf(f.src.width, f.src.height);
+          return (
+            <figure class={`lb-fig lb-fig--${mode}`}>
+              <Image
+                src={f.src}
+                alt={f.caption}
+                widths={[...WIDTHS[mode]]}
+                sizes={SIZES[mode]}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="lb-fig-cap">{f.caption}</figcaption>
+            </figure>
+          );
+        })
       }
     </div>
   </article>
@@ -365,13 +388,17 @@ const { slug, detail } = Astro.props;
     margin-top: 14px;
   }
 
-  /* ---- Gallery ---- */
+  /* ---- Gallery ----
+     Flex-wrap does the grouping: a wide figure claims its own row, phone-shaped
+     ones share a row. Items are sized from a fixed basis rather than flex-grow
+     so a short final row keeps the same widths as a full one. */
   .lb-gallery {
     margin-top: 56px;
     padding-top: 40px;
     border-top: 1px solid var(--color-border);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 24px;
   }
 
@@ -379,25 +406,32 @@ const { slug, detail } = Astro.props;
     margin: 0;
   }
 
-  .lb-fig:first-child {
-    grid-column: 1 / -1;
+  .lb-fig--wide {
+    flex: 1 1 100%;
   }
 
-  .lb-fig-slot {
-    aspect-ratio: var(--ratio);
-    display: grid;
-    place-items: center;
+  .lb-fig--tall {
+    flex: 0 1
+      calc(
+        (100% - (var(--tall-per-row) - 1) * 24px) / var(--tall-per-row)
+      );
+    min-width: 170px;
+  }
+
+  .lb-fig--doc {
+    flex: 1 1 100%;
+    max-width: 520px;
+  }
+
+  /* No aspect-ratio box and no object-fit: the image keeps its own proportions. */
+  .lb-fig :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
     border-radius: 14px;
     background: color-mix(in srgb, var(--accent) 6%, var(--color-surface));
     box-shadow: inset 0 0 0 1.5px
       color-mix(in srgb, var(--accent) 18%, transparent);
-  }
-
-  .lb-fig-icon {
-    width: 30px;
-    height: 30px;
-    color: color-mix(in srgb, var(--accent) 55%, var(--color-text-muted));
-    opacity: 0.65;
   }
 
   .lb-fig-cap {
@@ -408,19 +442,13 @@ const { slug, detail } = Astro.props;
     color: var(--color-text-muted);
   }
 
-  /* Portrait (phone screenshot) slots sit side by side at half width. */
-  .lb-fig:not(:first-child)[style*="9 / 16"] .lb-fig-slot {
-    max-width: 260px;
-    margin-inline: auto;
-  }
-
   /* ---- Responsive ---- */
   @media (max-width: 860px) {
     .lb-facts {
       grid-template-columns: repeat(2, 1fr);
     }
-    .lb-gallery {
-      grid-template-columns: 1fr;
+    .lb-fig--tall {
+      flex-basis: calc((100% - 24px) / 2);
     }
   }
 

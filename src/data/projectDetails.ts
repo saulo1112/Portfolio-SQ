@@ -2,11 +2,45 @@
 // Keyed by slug; a project card opens its lightbox when its slug is listed here.
 // To add a project: append an entry and set `slug` on its card in Projects.astro.
 
+// Screenshots. Imported so Astro reads their real width/height at build time and
+// optimises them; the gallery derives its layout from those intrinsic dimensions,
+// so no aspect ratio is ever declared by hand.
+import opticoder1 from "../assets/Images/Projects/OptiCoder/OptiCoder (1).png";
+import opticoder2 from "../assets/Images/Projects/OptiCoder/OptiCoder (2).png";
+import opticoder3 from "../assets/Images/Projects/OptiCoder/OptiCoder (3).png";
+
+import caliRiver1 from "../assets/Images/Projects/Cali river/(1).png";
+import caliRiver2 from "../assets/Images/Projects/Cali river/(2).png";
+
+import eudrParcel from "../assets/Images/Projects/EUDR/Parcel selection (1).png";
+import eudrInstructions from "../assets/Images/Projects/EUDR/Instructions (2).png";
+import eudrOverview from "../assets/Images/Projects/EUDR/General overview (3).png";
+
+import fudambient1 from "../assets/Images/Projects/Fudambient/Fudambient (1).png";
+import fudambient2 from "../assets/Images/Projects/Fudambient/Fudambient (2).png";
+import fudambient3 from "../assets/Images/Projects/Fudambient/Fudambient (3).png";
+import fudambient4 from "../assets/Images/Projects/Fudambient/Fudambient (4).png";
+
+import recovery1 from "../assets/Images/Projects/App Physical Recovery/(1).png";
+import recovery2 from "../assets/Images/Projects/App Physical Recovery/(2).png";
+
+import siteSelection1 from "../assets/Images/Projects/Site Selection Engine/(1).png";
+import siteSelection2 from "../assets/Images/Projects/Site Selection Engine/(2).png";
+
+import cauca1 from "../assets/Images/Projects/Cauca River Baseline/Global Overview.png";
+import cauca2 from "../assets/Images/Projects/Cauca River Baseline/Data extraction by station.png";
+import cauca3 from "../assets/Images/Projects/Cauca River Baseline/Flow profile.png";
+import cauca4 from "../assets/Images/Projects/Cauca River Baseline/Sugarcane hectares by rivers.png";
+
+import ortho1 from "../assets/Images/Projects/Ortho Vision AI/(1).jpeg";
+import ortho2 from "../assets/Images/Projects/Ortho Vision AI/(2).jpeg";
+import ortho3 from "../assets/Images/Projects/Ortho Vision AI/(3).jpeg";
+import ortho4 from "../assets/Images/Projects/Ortho Vision AI/(4).jpeg";
+import ortho5 from "../assets/Images/Projects/Ortho Vision AI/(5).jpeg";
+
 export type Figure = {
-  /** Shown under the placeholder , describes the image to drop in. */
+  src: ImageMetadata;
   caption: string;
-  /** Aspect ratio of the slot, e.g. "16 / 10" or "3 / 4". */
-  ratio?: string;
 };
 
 export type ProjectDetail = {
@@ -19,14 +53,17 @@ export type ProjectDetail = {
   stack: string;
   /** Short key/value facts rendered as a strip under the header. */
   facts: { label: string; value: string }[];
-  /** Headline numbers. Kept to 3–4 so they stay scannable. */
+  /** Headline numbers. Kept to 3-4 so they stay scannable. */
   metrics: { value: string; label: string }[];
   /** Narrative body. 2-3 sections, mostly one paragraph each. */
   sections: { heading: string; body: string[] }[];
-  /** Exactly 3. figures[0] renders full-width as the hero , give it a landscape ratio
-      (16/10, 16/9, 3/2); a portrait hero leaves the row visually empty. figures[1] and
-      figures[2] sit side by side beneath it. */
-  figures: [Figure, Figure, Figure];
+  /** 2-5 screenshots. The gallery groups them by their own aspect ratio:
+      wide ones take a full row, phone-shaped ones sit 3 per row, and anything
+      in between is centred at a capped width. Order is the reading order. */
+  figures: Figure[];
+  /** Thumbnail for the project card. Defaults to figures[0]; set it only when
+      that image survives the card's crop badly (portrait screenshots). */
+  card?: ImageMetadata;
 };
 
 export const projectDetails: Record<string, ProjectDetail> = {
@@ -72,9 +109,9 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Capture screen with accessible controls", ratio: "9 / 16" },
-      { caption: "Conversational response interface", ratio: "16 / 10" },
-      { caption: "Architecture: client, cloud, and local playback", ratio: "16 / 10" },
+      { src: opticoder1, caption: "Welcome screen prompting the first capture" },
+      { src: opticoder2, caption: "Camera pointed at a real editor — capture confirmed, ready to send" },
+      { src: opticoder3, caption: "Spoken answer describing the script, with a voice follow-up" },
     ],
   },
 
@@ -119,9 +156,8 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Study area with monitoring stations", ratio: "16 / 10" },
-      { caption: "Nested leave-one-out cross-validation protocol", ratio: "16 / 10" },
-      { caption: "Model performance: ε-SVR, fuzzy inference, logistic regression", ratio: "16 / 10" },
+      { src: caliRiver1, caption: "Choosing a prediction target: two bioindicator families or the BMWP/Col index" },
+      { src: caliRiver2, caption: "ε-SVR result reported as a range and an approximate class, not a point value" },
     ],
   },
 
@@ -167,9 +203,9 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Study area selection from cocoa-probability clusters", ratio: "16 / 10" },
-      { caption: "Early-warning dashboard , LOW-risk parcels ranked by context", ratio: "16 / 10" },
-      { caption: "Model v3 performance: PR-AUC 0.846, macro-F1 0.837", ratio: "16 / 10" },
+      { src: eudrParcel, caption: "Parcel 2482 inspected: 4.83 ha, 15.92% deforested, risk score 0.940" },
+      { src: eudrInstructions, caption: "Entry screen framing the risk score as a triage aid, not a compliance verdict" },
+      { src: eudrOverview, caption: "All 4,170 parcels across 12,100 ha, coloured by compliance status" },
     ],
   },
 
@@ -214,9 +250,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Homepage with brand, video, and primary CTA", ratio: "16 / 10" },
-      { caption: "Projects page , five practice areas, filterable cards", ratio: "16 / 10" },
-      { caption: "Achievements timeline with reveal-on-scroll animation", ratio: "16 / 10" },
+      { src: fudambient1, caption: "Homepage over drone footage, with the bilingual switch in the nav" },
+      { src: fudambient2, caption: "About page: split layout pairing the statement with field imagery" },
+      { src: fudambient3, caption: "Services laid out as an alternating timeline down the page" },
+      { src: fudambient4, caption: "Projects filtered by practice area, each card carrying its location" },
     ],
   },
 
@@ -261,9 +298,8 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Live session , skeleton overlay with angle and rep count", ratio: "16 / 10" },
-      { caption: "Architecture: Streamlit client, gRPC server, inference pipeline", ratio: "16 / 10" },
-      { caption: "Session report: angle trace and repetition boundaries", ratio: "16 / 10" },
+      { src: recovery1, caption: "Live session: ViTPose skeleton with repetition count and current angle" },
+      { src: recovery2, caption: "Clinical report generated at the end of the session" },
     ],
   },
 
@@ -308,14 +344,13 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "H3 hexagon grid over Bogotá with store locations", ratio: "16 / 10" },
-      { caption: "Spatial cross-validation folds with buffer rings", ratio: "16 / 10" },
-      { caption: "Ranking metrics: v1 (NDCG 0.80), v2 (0.83), v3 (0.84)", ratio: "16 / 10" },
+      { src: siteSelection1, caption: "Top hexagon scored 0.997 of 3,589 candidates, with the reasons beside it" },
+      { src: siteSelection2, caption: "Zoomed to the shortlist: ranks 2–6 and per-hexagon scores" },
     ],
   },
 
   "riocauca-baseline": {
-    title: "RioCauca Baseline",
+    title: "Cauca River Baseline",
     tagline:
       "Sugarcane hectares split by river segment, computed in the browser , and made to close at exactly 100%.",
     tags: ["GIS", "Geospatial analysis", "JavaScript"],
@@ -355,9 +390,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Interactive viewer with tributaries and monitoring stations", ratio: "16 / 10" },
-      { caption: "Segment cutting tool with closure check", ratio: "16 / 10" },
-      { caption: "Sugarcane hectares across fifteen tributaries", ratio: "16 / 10" },
+      { src: cauca1, caption: "Full viewer: 43 river segments, 17 tributaries and every station layer" },
+      { src: cauca2, caption: "Per-station data extraction with CSV export" },
+      { src: cauca3, caption: "Flow profile along the corridor" },
+      { src: cauca4, caption: "Sugarcane hectares attributed to each tributary" },
     ],
   },
 
@@ -402,9 +438,12 @@ export const projectDetails: Record<string, ProjectDetail> = {
       },
     ],
     figures: [
-      { caption: "Mobile app with segmentation overlay and confidence", ratio: "9 / 16" },
-      { caption: "ONNX parity report showing per-class agreement", ratio: "16 / 10" },
-      { caption: "Architecture: Expo, gRPC server, inference pipeline", ratio: "16 / 10" },
+      { src: ortho1, caption: "Entry screen: capture or upload a radiograph, model status visible" },
+      { src: ortho2, caption: "Joint prosthesis segmented on a hip X-ray — 2 detections in 870 ms" },
+      { src: ortho3, caption: "Intramedullary nails traced on both tibiae" },
+      { src: ortho4, caption: "Screwed plate segmented at 87% confidence" },
+      { src: ortho5, caption: "History of past analyses with per-class confidence" },
     ],
+    card: ortho2,
   },
 };

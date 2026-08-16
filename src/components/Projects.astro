@@ -3,8 +3,16 @@ import eudrVideo from "../assets/Videos/EUDR Hero Animation.mp4";
 import fudambientVideo from "../assets/Videos/Fudambient.mp4";
 import physicalRecoveryVideo from "../assets/Videos/App Physical Recovery.mp4";
 import optiCoderVideo from "../assets/Videos/OptiCoder Hero.mp4";
+import { Image } from "astro:assets";
 import ProjectLightbox from "./ProjectLightbox.astro";
 import { projectDetails } from "../data/projectDetails";
+
+// Card thumbnail: the project's own `card` override when its lead screenshot
+// would survive the crop badly, otherwise the first figure.
+const thumbOf = (slug: string) => {
+  const d = projectDetails[slug];
+  return d ? (d.card ?? d.figures[0].src) : undefined;
+};
 
 const featured = [
   {
@@ -91,6 +99,18 @@ const small = [
     slug: "ortho-vision",
     accent: "#ffb3c1",
   },
+  {
+    // TODO: real title, tags, github URL and lightbox content pending
+    title: "[TODO: project name]",
+    tags: ["TBD"],
+    accent: "#0057A4",
+  },
+  {
+    // TODO: real title, tags, github URL and lightbox content pending
+    title: "[TODO: project name]",
+    tags: ["TBD"],
+    accent: "#D35400",
+  },
 ];
 ---
 
@@ -158,41 +178,31 @@ const small = [
       {
         small.map((p) => (
           <article class="item-sm" style={`--accent: ${p.accent};`}>
-            <div class="media placeholder">
-              <svg
-                class="placeholder-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="3"
-                  y="3"
-                  width="18"
-                  height="18"
-                  rx="2"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                />
-                <circle cx="8.5" cy="9" r="1.6" stroke="currentColor" stroke-width="1.4" />
-                <path
-                  d="M4 16.5L9 12l3.5 3.5L15 13l5 5"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span class="placeholder-label">Preview coming soon</span>
-              <a
-                class="gh"
-                href={p.github}
-                target="_blank"
-                rel="noopener"
-                aria-label={`GitHub: ${p.title}`}
-              >
-                GitHub ↗
-              </a>
+            <div class="media">
+              {(() => {
+                const thumb = thumbOf(p.slug);
+                return thumb ? (
+                  <Image
+                    src={thumb}
+                    alt={`${p.title} preview`}
+                    widths={[360, 620, 1240]}
+                    sizes="(max-width: 600px) 92vw, (max-width: 1360px) 45vw, 620px"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : null;
+              })()}
+              {p.github && (
+                <a
+                  class="gh"
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`GitHub: ${p.title}`}
+                >
+                  GitHub ↗
+                </a>
+              )}
             </div>
             <div class="info">
               <div class="tags">
@@ -315,6 +325,13 @@ const small = [
     background: #000;
   }
 
+  /* Cards without a screenshot yet (no <img> inside .media) fall back to a
+     solid panel in the project's own accent — a placeholder that still reads
+     as "this project" rather than a blank box. */
+  .item-sm .media:not(:has(img)) {
+    background: var(--accent);
+  }
+
   /* Invisible full-card button — makes the whole card open the lightbox while
      leaving the GitHub pill (higher z-index) clickable on its own. */
   .card-trigger {
@@ -434,7 +451,7 @@ const small = [
     opacity: 0.75;
   }
 
-  /* ---- Secondary — same card shape as Featured, media placeholder ---- */
+  /* ---- Secondary — same card shape as Featured, with a screenshot preview ---- */
   .small {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -464,35 +481,14 @@ const small = [
       0 24px 48px rgba(0, 0, 0, 0.4);
   }
 
-  /* Media placeholder — dashed frame + icon until real preview lands */
-  .media.placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background:
-      linear-gradient(
-        color-mix(in srgb, var(--accent) 6%, var(--color-surface)),
-        color-mix(in srgb, var(--accent) 6%, var(--color-surface))
-      );
-    box-shadow: inset 0 0 0 1.5px
-      color-mix(in srgb, var(--accent) 18%, transparent);
-  }
-
-  .placeholder-icon {
-    width: 34px;
-    height: 34px;
-    color: color-mix(in srgb, var(--accent) 55%, var(--color-text-muted));
-    opacity: 0.7;
-  }
-
-  .placeholder-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
+  /* Card preview. Portrait screenshots lose most of their height to the 16/11
+     crop, so they are anchored to the top where the app header still reads. */
+  .item-sm .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
   }
 
   .item-sm .info {
