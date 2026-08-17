@@ -30,40 +30,25 @@ import profilePicture from "../assets/Profile picture.png";
       <p class="eyebrow">ABOUT</p>
 
       <h2 class="heading">
-        Environmental engineer turned software developer.
+        Hi, I'm Saulo Quiñones. Environmental engineer, software builder.
       </h2>
 
       <p class="para">
-        I build geospatial pipelines, spatial ML systems and REST APIs for
-        problems where data has coordinates and decisions have real
-        consequences.
+        I work across three areas, web development, GIS, and applied AI, and I'm comfortable picking up whatever a project needs, from a shipped interface to a machine learning pipeline. I'm an environmental engineer who has applied most of this to real world problems, and I carry that same mix of data, logic, and design into any team that needs it.
       </p>
 
       <p class="para">
-        Right now I'm on the Biological Corridor project (UAO + ASOCAÑA):
-        geodatabase design, hydrological analysis pipelines and an interactive
-        cartographic viewer for water quality monitoring across 15 river
-        tributaries.
+        I'm strongest with spatial databases and geoprocessing, backend services in Python and Node.js, and machine learning across computer vision, time series, and accessibility tools. On the frontend I work with React and Astro. Right now I'm deep in geospatial data engineering and interactive web mapping, turning data from multiple sources into tools people actually use.
       </p>
 
       <div class="stats" id="about-stats">
         <div class="stat">
-          <span class="stat-num" data-target="15" data-format="int">0</span>
-          <span class="stat-label">Rivers monitored</span>
+          <span class="stat-num" data-target="10" data-format="int-plus">0</span>
+          <span class="stat-label">Projects built</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-target="4170" data-format="comma">0</span>
-          <span class="stat-label">Parcels analyzed</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-target="0.846" data-format="decimal3"
-            >0</span
-          >
-          <span class="stat-label">Model PR-AUC</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-target="4.7" data-format="score">0</span>
-          <span class="stat-label">Academic score</span>
+          <span class="stat-num" data-target="3" data-format="comma">0</span>
+          <span class="stat-label">Domains, one skill set</span>
         </div>
       </div>
 
@@ -180,6 +165,9 @@ import profilePicture from "../assets/Profile picture.png";
     line-height: 1.7;
     color: var(--color-text-secondary);
     margin-bottom: 16px;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
   }
 
   /* ---- Stats grid ---- */
@@ -707,6 +695,8 @@ import profilePicture from "../assets/Profile picture.png";
           return value.toFixed(3);
         case "score":
           return value.toFixed(1) + "/5";
+        case "int-plus":
+          return String(Math.round(value)) + "+";
         case "int":
         default:
           return String(Math.round(value));
