@@ -76,7 +76,10 @@ const entries = experienceEntries;
 <style>
   /* ── Section ── */
   .experience-section {
-    padding: 84px 0;
+    /* Bottom padding trimmed: the education footnote already carries its own
+       top border + spacing, and Projects' top padding adds more below, so
+       full symmetric padding here left a wide gap before "Featured Projects". */
+    padding: 84px 0 40px;
     border-top: 1px solid var(--color-border);
     position: relative;
     overflow: hidden;
@@ -390,7 +393,7 @@ const entries = experienceEntries;
   /* ── Mobile ── */
   @media (max-width: 768px) {
     .experience-section {
-      padding: 64px 0;
+      padding: 64px 0 32px;
     }
 
     /* Force line/orb to left side; JS X-compute is skipped on mobile

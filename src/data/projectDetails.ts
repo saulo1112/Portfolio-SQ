@@ -89,7 +89,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       "A phone camera that reads code screenshots, UI mockups and architecture diagrams aloud , for developers who can't see them.",
     tags: ["Mobile", "Multimodal AI", "Accessibility"],
     accent: "#0057A4",
-    github: "https://github.com/saulo1112/PDproject",
+    github: "https://github.com/saulo1112/OptiCoder",
     stack:
       "React Native · Expo · TypeScript · Google Gemini · OpenAI Whisper",
     facts: [
@@ -287,7 +287,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       "Two deep learning models chained per frame, turning a phone camera into a rehabilitation coach that counts your reps and grades them.",
     tags: ["Computer vision", "Deep learning", "MLOps"],
     accent: "#ffb3c1",
-    github: "https://github.com/miguelfrancor01/App_PhysicalRecovery",
+    github: "https://github.com/saulo1112/App_PhysicalRecovery",
     stack: "PyTorch · HuggingFace · gRPC · Streamlit · MLflow · Docker",
     facts: [
       { label: "Domain", value: "Upper-limb rehabilitation" },
