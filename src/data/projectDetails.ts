@@ -38,11 +38,21 @@ import ortho3 from "../assets/Images/Projects/Ortho Vision AI/(3).jpeg";
 import ortho4 from "../assets/Images/Projects/Ortho Vision AI/(4).jpeg";
 import ortho5 from "../assets/Images/Projects/Ortho Vision AI/(5).jpeg";
 
+import transitDose from "../assets/Images/Projects/Cali Transit Exposure/inhalation-dose-timeline.png";
+import transitPm10Route from "../assets/Images/Projects/Cali Transit Exposure/pm10-concentration-route.png";
+import transitHeatmap from "../assets/Images/Projects/Cali Transit Exposure/pm10-heatmap.png";
+import transitDistributions from "../assets/Images/Projects/Cali Transit Exposure/concentration-distributions.png";
+
+import airambInterface from "../assets/Images/Projects/AirAMB/Interface (1).png";
+import airambReport from "../assets/Images/Projects/AirAMB/Report (2).png";
+
 // Dedicated card thumbnails, framed to the card's 16:11 box so nothing crops.
 import caliRiverCard from "../assets/Images/Thumbnails/Cali River Biomonitoring.png";
 import siteSelectionCard from "../assets/Images/Thumbnails/Site Selection Engine.png";
 import caucaBaselineCard from "../assets/Images/Thumbnails/Cauca River Baseline.png";
 import orthoVisionCard from "../assets/Images/Thumbnails/Ortho Vision AI.png";
+import caliTransitCard from "../assets/Images/Thumbnails/Cali Transit Exposure.png";
+import airambCard from "../assets/Images/Thumbnails/AirAMB.png";
 
 export type Figure = {
   src: ImageMetadata;
@@ -116,7 +126,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     ],
     figures: [
       { src: opticoder1, caption: "Welcome screen prompting the first capture" },
-      { src: opticoder2, caption: "Camera pointed at a real editor — capture confirmed, ready to send" },
+      { src: opticoder2, caption: "Camera pointed at a real editor: capture confirmed, ready to send" },
       { src: opticoder3, caption: "Spoken answer describing the script, with a voice follow-up" },
     ],
   },
@@ -124,7 +134,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
   "cali-river": {
     title: "Cali River Biomonitoring",
     tagline:
-      "Eighteen records, nine stations. Which ecological predictions can a dataset that small honestly support , and which ones only look like they work?",
+      "Eighteen records, nine stations. Which ecological predictions can a dataset that small honestly support, and which ones only look like they work?",
     tags: ["Machine learning", "Ecological modelling", "Research"],
     accent: "#4ac4c9",
     github: "https://github.com/saulo1112/cali-river-biomonitoring",
@@ -137,27 +147,34 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { label: "Validation", value: "Nested leave-one-out" },
     ],
     metrics: [
-      { value: "κ 0.516", label: "Best habitat suitability (Perlidae)" },
-      { value: "κ 0.258", label: "Best water quality (BMWP/Col)" },
-      { value: "−0.21", label: "κ inflation removed by nesting" },
+      { value: "83% precision", label: "Habitat suitability (Perlidae)" },
+      { value: "18/18 folds", label: "Predictors agreed on, unanimously" },
+      { value: "3/3 techniques", label: "Independent methods, same answer" },
+      { value: "Deployed", label: "Working prediction interface, not just a notebook" },
     ],
     sections: [
       {
         heading: "The problem",
         body: [
-          "Biotic sampling is slow and expensive, while automated water chemistry is routine. The question is obvious: can we predict river health from chemistry we're already collecting? Machine learning says yes, on thousands of sites. But regional authorities hold fewer than thirty stations across one or two campaigns. The useful question is not which algorithm wins on abundant data, but which performs honestly on scarce data, and how much reported performance is real.",
+          "Biotic sampling is slow and expensive, while automated water chemistry is routine. The question is obvious: can river health be predicted from chemistry already being collected? Machine learning says yes, on thousands of sites. Regional authorities hold fewer than thirty stations across one or two campaigns. The useful question isn't which algorithm wins on abundant data. It's which performs honestly on scarce data, and how much of the reported performance is real.",
         ],
       },
       {
         heading: "Why validation was the actual subject",
         body: [
-          "At small sample sizes, data leakage becomes consequential. Any path that lets held-out information reach the model beforehand inflates the score invisibly. Surveys across seventeen fields found it reversing published conclusions. So every decision (predictor selection, hyperparameter tuning, even membership-function estimation) was re-run inside each training fold under a nested leave-one-out protocol. The gap between nested and standard metrics becomes its own measurement: how much performance was borrowed from data the model shouldn't have seen.",
+          "At small sample sizes, data leakage is the silent killer of a reported score. Any path that lets held-out information reach the model beforehand inflates performance invisibly; surveys across seventeen scientific fields have found it reversing published conclusions. So every decision, predictor selection, hyperparameter tuning, even membership-function estimation, was re-run inside each training fold. The gap between nested and standard metrics became its own result: a direct measurement of how much performance was borrowed from data the model shouldn't have seen.",
         ],
       },
       {
         heading: "What came out of it",
         body: [
-          "No technique won across the board. ε-SVR excelled at water quality, fuzzy inference at habitat suitability, logistic regression at another family. Nesting the selection step cut metrics by up to 0.21 in five configurations and left the sixth unchanged, which shows exactly where validation design matters. The water quality model can't name exact values but ranks stations well, and ranking is what a monitoring program needs to decide where to sample next. Habitat suitability for common taxa is tractable; five-class predictions are not. That boundary came from measurement, not assumption, which makes it portable to other data-scarce basins.",
+          "No technique won across the board, and that's the point of testing five. ε-SVR led on water quality, fuzzy inference on habitat suitability, logistic regression on the rarer of the two bioindicator families. The strongest signal in the project wasn't any single score: three unrelated model families, a rule-based system, a parametric model, and a tree, independently converged on the same three predictors for the same taxon, chosen in every one of 18 test rounds. That kind of agreement doesn't happen by chance at this sample size. The water-quality model can't name an exact index value, but it ranks stations correctly, which is what a monitoring program actually needs to decide where to sample next. Habitat suitability for a moderately common taxon turned out to be tractable; five-class water-quality prediction did not. That boundary was found by measurement, not assumed, which is what makes it portable to other data-scarce basins.",
+        ],
+      },
+      {
+        heading: "From notebook to tool",
+        body: [
+          "The three winning models were packaged into a lightweight prediction interface: pick a target, move a slider within the range the data actually supports, get a class and a confidence score instead of a bare number. It's a small piece of software, but it's the difference between a result that lives in a paper and one a water authority could actually open.",
         ],
       },
     ],
@@ -171,7 +188,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
   eudr: {
     title: "EUDR Forest Risk Assessment",
     tagline:
-      "Screening 4,170 real agricultural parcels for EU deforestation compliance , using nothing but open satellite data.",
+      "Screening 4,170 real agricultural parcels for EU deforestation compliance, using nothing but open satellite data.",
     tags: ["GIS", "Machine learning", "FastAPI"],
     accent: "#1D9E75",
     github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
@@ -360,7 +377,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
   "riocauca-baseline": {
     title: "Cauca River Baseline",
     tagline:
-      "Sugarcane hectares split by river segment, computed in the browser , and made to close at exactly 100%.",
+      "Internal water-quality viewer for the Cauca River corridor project: station data, flow and quality time series, and sugarcane exposure computed per river segment, closed to exactly 100%.",
     tags: ["GIS", "Geospatial analysis", "JavaScript"],
     accent: "#debfc5",
     github: "https://github.com/saulo1112/RioCauca_Baseline",
@@ -374,13 +391,20 @@ export const projectDetails: Record<string, ProjectDetail> = {
     metrics: [
       { value: "25,092 ha", label: "Sugarcane resolved across 46 segments" },
       { value: "15", label: "Prioritised tributaries analysed" },
-      { value: "100.0000%", label: "Geometric closure, segments against river total" },
+      { value: "100.0%", label: "Geometric closure, segments against river total" },
     ],
     sections: [
       {
-        heading: "The problem",
+        heading: "What's in the viewer",
         body: [
-          "A biological-corridor diagnosis needs to know how much diffuse load reaching the Cauca River comes from where. Land-use figures existed per river (one number for the whole Bolo, one for the whole Fraile). Monitoring stations sit at points along those rivers, so a per-river total cannot be matched against a measurement taken at any one station. The analysis needed land use per segment, the stretch between two consecutive stations.",
+          "Four reaches of the Cauca, 74 tributary stations, five toggleable layers. Clicking a station opens its quality profile and flow-duration curve, with the underlying series downloadable as CSV. The sidebar collapses to keep the map the focus; a blinking highlight ties each cane polygon back to the segment it belongs to.",
+        ],
+      },
+      {
+        heading: "The problem the corridor team actually had",
+        body: [
+          "Diagnosing a biological corridor means constantly crossing three things that don't live in the same place: water quality at a station, flow at that same point, and how much of the basin upstream is under cane. Doing that by hand, spreadsheet by spreadsheet, doesn't scale past a handful of rivers. The viewer exists to make that crossing a click instead of a rebuild.",
+          "One piece of that crossing turned out to be its own hard problem: land-use figures existed per river (one number for the whole Bolo, one for the whole Fraile), but stations sit at points along those rivers, so a per-river total can't be matched against a measurement taken at any one station. The fix needed land use per segment, the stretch between two consecutive stations.",
         ],
       },
       {
@@ -393,7 +417,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
       {
         heading: "What it revealed",
         body: [
-          "Forty-six segments across fifteen tributaries, 25,092 hectares of sugarcane, plus full land-use breakdown over the same partition. The 700 m buffer only covers the flat valley floor, so on two rivers it reaches barely 30% of the channel axis and only 48 of 74 stations are usable. Two rivers hold a single station inside the cane zone, so they admit no intermediate cut. That's a gap in coverage worth naming honestly. The whole viewer is static: MapLibre and Turf from a CDN, native ES modules, no bundler, auto-deployed on push.",
+          "Forty-six segments across fifteen tributaries, 25,092 hectares of sugarcane, plus full land-use breakdown over the same partition, now queryable station by station alongside its quality and flow history. The 700 m buffer only covers the flat valley floor, so on two rivers it reaches barely 30% of the channel axis and only 48 of 74 stations are usable. Two rivers hold a single station inside the cane zone, so they admit no intermediate cut. That's a gap in coverage worth naming honestly. The whole viewer is static: MapLibre and Turf from a CDN, native ES modules, no bundler, auto-deployed on push.",
         ],
       },
     ],
@@ -409,50 +433,144 @@ export const projectDetails: Record<string, ProjectDetail> = {
   "ortho-vision": {
     title: "Ortho Vision AI",
     tagline:
-      "A radiograph segmentation model exported to ONNX, proven equivalent to its source, served without PyTorch, and deployed to mobile.",
-    tags: ["Computer vision", "MLOps", "Mobile"],
+      "Surgeons spend up to 30 minutes identifying an implant before surgery. Can instance segmentation read the radiograph instead, from a dataset that had to be built by hand?",
+    tags: ["Computer vision", "Medical imaging", "Deep learning"],
     accent: "#f1f5f7",
     github: "https://github.com/saulo1112/Ortho-Vision-AI",
     stack: "YOLOv8-seg · ONNX Runtime · FastAPI · OpenCV · Expo · Docker",
     facts: [
-      { label: "Task", value: "Instance segmentation" },
-      { label: "Classes", value: "3 orthopedic implant types" },
-      { label: "Test set", value: "36 held-out radiographs" },
+      { label: "Domain", value: "Orthopedic radiograph analysis" },
+      { label: "Classes", value: "3 implant types, hand-labeled" },
+      { label: "Dataset", value: "240 base images → 408 augmented" },
       { label: "Clients", value: "REST API + Expo mobile app" },
     ],
     metrics: [
-      { value: "≥0.996", label: "Mask agreement, ONNX against PyTorch" },
-      { value: "~300 MB", label: "Serving image, fits a 512 MB instance" },
-      { value: "~450 ms", label: "Mean CPU inference per radiograph" },
+      { value: "88%", label: "Surgeons who failed to ID an implant before surgery" },
+      { value: "0.91–0.96", label: "IoU across all three implant classes" },
+      { value: "408", label: "Curated radiographs from 3 public sources" },
     ],
     sections: [
       {
-        heading: "The distance from research to deployed",
+        heading: "The problem",
         body: [
-          "A segmentation model identifying intramedullary nails, screwed plates, and joint prostheses in radiographs is useful. A checkpoint file is not. The distance between a trained model and something a person can point at an X-ray is the entire project. This work takes a research model through that distance: export, validation, serving, client. It's a portfolio and teaching artefact, not a medical device, intended for educational use only.",
+          "Surgeons who don't already know which implant a patient is carrying lose real time finding out. A 2012 survey of hip and knee surgeons found an average of 20 minutes and at least three identification methods before getting it right, with support staff needing 30. Close to 9 in 10 surgeons reported failing to identify an implant before surgery at least once, a miss that means extra devices brought into the operating room, longer procedures, more blood loss, and slower recovery. Projected forward, that identification gap could cost the United States $3.3 million by 2030, with more than 50,000 implants left unidentified each year. That's the problem instance segmentation targets here: telling intramedullary nails, screwed plates, and joint prostheses apart in a radiograph automatically, before someone has to guess.",
         ],
       },
       {
-        heading: "Certified equivalence and lightweight serving",
+        heading: "Building a dataset that didn't exist",
         body: [
-          "Converting a checkpoint to ONNX appears to work, but silent drift happens in post-processing, resize handling, activations. So the conversion is certified rather than assumed. A script runs both pipelines over the held-out test set and reports mask-to-mask agreement and per-class metric delta. Agreement holds at 0.996 or better across all three classes. IoU and Dice differ by no more than 0.001.",
-          "YOLOv8-seg's post-processing (non-maximum suppression, mask assembly, polygonisation) is reimplemented in numpy and OpenCV, leaving ONNX Runtime as the only inference dependency. The result is a roughly 300 MB image that runs on a free-tier 512 MB instance at about 450 ms per image on CPU. Polygons come back in normalised coordinates so the client scales them to any display. The Expo app probes candidate backends in order (configured URL, USB tunnel, dev host) and uses the first that answers.",
+          "No public dataset for segmenting orthopedic implants existed, so building one came first. Over 4,000 candidate images were pulled from three sources: UCI's Shoulder Implant X-ray Manufacturer dataset, Kaggle's Bone Fracture Detection set filtered down to non-redundant, diagnostic-quality images, and targeted MedlinePlus searches to cover intramedullary nails specifically, since the first two barely showed them. Four team members hand-labeled 60 images each on Roboflow under one agreed standard, yielding 240 curated images, split 70/15/15 and expanded to 408 through controlled rotation so the model would see the same implant tilted the way a real radiograph tilts it.",
+          "The limiting factor was never volume, it was variety. The pooled images skewed unevenly across anatomical regions (thorax, femur, humerus, pelvis) and rarely captured one implant from more than a single angle, so the model had less to generalize from per bone or projection than the raw count suggests. That gap is documented rather than smoothed over, since no permission-free source for orthopedic segmentation exists to fill it.",
         ],
       },
       {
-        heading: "Mobile delivery",
+        heading: "What held up, and what didn't",
         body: [
-          "The app takes a photo or picks a radiograph, posts it, and draws returned polygons as SVG overlays with per-instance confidence. Vector masks stay sharp at any screen density and zoom level. The medical disclaimer is part of the interface, not a README note.",
+          "On the held-out test set, the trained model reached IoU between 0.91 and 0.96 and Dice near 0.97 across all three classes, with the intramedullary nail (long, sharply contrasted against bone) segmenting cleanest and the joint prosthesis hardest to pin down at a stricter confidence threshold. A second hypothesis, that classical preprocessing (a Gaussian filter followed by CLAHE) would sharpen segmentation, was tested rather than assumed, and it didn't hold: preprocessed and raw images scored within a fraction of a point of each other, evidence that the model's own convolutional layers already learn contrast-invariant features. From there the trained model left the notebook: exported to ONNX with certified equivalence against the original weights, served without PyTorch, and reachable from a mobile app that overlays predicted masks with per-instance confidence directly on the X-ray. It's an educational artefact, not a medical device, and isn't intended for clinical use.",
         ],
       },
     ],
     figures: [
       { src: ortho1, caption: "Entry screen: capture or upload a radiograph, model status visible" },
-      { src: ortho2, caption: "Joint prosthesis segmented on a hip X-ray — 2 detections in 870 ms" },
+      { src: ortho2, caption: "Joint prosthesis segmented on a hip X-ray: 2 detections in 870 ms" },
       { src: ortho3, caption: "Intramedullary nails traced on both tibiae" },
       { src: ortho4, caption: "Screwed plate segmented at 87% confidence" },
       { src: ortho5, caption: "History of past analyses with per-class confidence" },
     ],
     card: orthoVisionCard,
+  },
+
+  airamb: {
+    title: "AirAMB",
+    tagline:
+      "Can next hour's PM2.5 be forecast from what a city already measures? Three regressors compared under one honest split, the winner shipped as a desktop app.",
+    tags: ["Machine learning", "Time series", "Desktop app"],
+    accent: "#2459e1",
+    github: "https://github.com/saulo1112/AirAMB",
+    stack: "Python · pandas · scikit-learn · pywebview · PyInstaller",
+    facts: [
+      { label: "Domain", value: "Air quality forecasting" },
+      { label: "Station", value: "Santa Cruz, Girón Norte" },
+      { label: "Horizon", value: "PM2.5, one hour ahead" },
+      { label: "Delivery", value: "Windows desktop app" },
+    ],
+    metrics: [
+      { value: "0.960", label: "R² on the held-out test set, Random Forest" },
+      { value: "3.716", label: "RMSE (µg/m³) forecasting PM2.5 one hour ahead" },
+      { value: "17", label: "Input features feeding the deployed model" },
+    ],
+    sections: [
+      {
+        heading: "The problem",
+        body: [
+          "Fine particulate matter, PM2.5, is one of the most direct threats air pollution poses to health, and its hourly swings are driven by weather and traffic patterns that are hard to anticipate without a model. Colombia's open monitoring network publishes hourly pollution and weather readings from dozens of stations, but coverage is inconsistent, and most of that data sits unused beyond historical reporting. The question was whether a city's own hourly records are enough to forecast PM2.5 one hour ahead, and whether that forecast could be handed to someone through more than a spreadsheet.",
+        ],
+      },
+      {
+        heading: "Choosing data over convenience",
+        body: [
+          "Of the stations reporting both pollution and weather variables, Santa Cruz, Girón Norte in Bucaramanga had the most complete coverage, so it became the sole subject of the model. From 16,824 raw hourly records, feature engineering built three lags each of PM2.5 and PM10, cyclic encodings of hour and day of week, and a chronological train and test split that keeps the future out of training. That left 12,826 records and 23 features. Three regressors, Random Forest, AdaBoost, and Ridge, were then compared on identical folds instead of picking one on reputation.",
+        ],
+      },
+      {
+        heading: "The result",
+        body: [
+          "Random Forest won on every accuracy metric, R² of 0.960 against 0.936 for both AdaBoost and Ridge on the test set, at a training cost over four times AdaBoost's and more than three thousand times Ridge's. That tradeoff was accepted because prediction, not training, runs in production, and Random Forest's own inference stayed under a fifth of a second. The chosen model now ships inside AirAMB, a Windows desktop app built with pywebview that takes the seventeen input variables by hand and returns a PM2.5 forecast one hour ahead, with an option to export the session as a PDF report.",
+        ],
+      },
+    ],
+    figures: [
+      { src: airambInterface, caption: "Input panel and one-hour PM2.5 forecast, with model version and PDF export" },
+      { src: airambReport, caption: "Exported report, cross-checked against Colombia's official PM10/PM2.5 alert thresholds" },
+    ],
+    card: airambCard,
+  },
+
+  "cali-transit-exposure": {
+    title: "Cali Transit Exposure",
+    tagline:
+      "What does a bus rider in Cali actually breathe? A low-cost sensor rode MIO, the city's bus rapid transit system, for an hour to find out, and the answer beat a published benchmark in the wrong direction.",
+    tags: ["Air quality", "Mobile sensing", "Research"],
+    accent: "#2c6db0",
+    github: "https://github.com/saulo1112/Cali-Transit-Exposure",
+    stack: "Python · pandas · Folium · GeoPandas · contextily",
+    facts: [
+      { label: "Corridor", value: "Autopista Simón Bolívar, Cali" },
+      { label: "Transect", value: "18.2 km, route P21B" },
+      { label: "Instrument", value: "AirBeam, HabitatMap" },
+      { label: "Sampling", value: "1 Hz · 3,630 records" },
+    ],
+    metrics: [
+      { value: "52.1 µg/m³", label: "Mean PM10 along the transect" },
+      { value: "55%", label: "Of the route in the High PM10 band" },
+      { value: "94/100", label: "RedCOLSI national round score" },
+    ],
+    sections: [
+      {
+        heading: "The problem",
+        body: [
+          "About 99% of the world breathes air that exceeds WHO limits, and in Colombia air pollution was associated with 10,527 deaths in 2015 alone. Transport has historically driven a large share of that burden, roughly 85% of the country's atmospheric emissions in 2002, part of why Cali built MIO, its bus rapid transit system, in 2009. But exposure inside a bus is not the same as exposure on the street: passengers and drivers see the highest concentrations of any transport mode, with a documented 58.75% difference in fine particulate matter between buses and private cars, driven mostly by crowding and limited ventilation. What riders on that system actually breathe had never been measured.",
+        ],
+      },
+      {
+        heading: "Measuring a moving microenvironment",
+        body: [
+          "A low-cost AirBeam sensor rode an 18.2 km stretch of route P21B, from Universidades station to the Menga terminal, logging PM1, PM2.5, and PM10 once per second alongside GPS position, for 3,630 georeferenced readings over one hour. Inhalation dose, the amount a passenger actually breathes in, follows directly from concentration, a light-activity breathing rate of 0.00576 m³/min, and exposure time. Every reading carries both a pollutant level and a place, so the concentration along the route and the dose accumulated by a rider are the same dataset, not two studies stitched together.",
+        ],
+      },
+      {
+        heading: "What the transect showed",
+        body: [
+          "Mean PM10 sat at 52.1 µg/m³, with 55% of the trip in the High band under Resolución 2254 de 2017, Colombia's national air-quality standard. Framed as inhalation dose, PM10 exposure ran above a published PM2.5 benchmark from a comparable Medellín transit study for most of the route, while PM2.5 exposure stayed below it. Held constant over 24 hours, the peak in-cabin readings would breach the national limit outright. The result presented at RedCOLSI's national round, 94/100, made a specific case: cabin ventilation is the lever most directly available to cut what a passenger actually inhales, not just what a fixed monitor two blocks away happens to report.",
+        ],
+      },
+    ],
+    figures: [
+      { src: transitDose, caption: "PM10 and PM2.5 inhalation dose over the 62-minute transect" },
+      { src: transitPm10Route, caption: "PM10 concentration along the Universidades to Menga route" },
+      { src: transitHeatmap, caption: "PM10 density across the transect" },
+      { src: transitDistributions, caption: "Concentration distributions against Resolución 2254 de 2017 thresholds" },
+    ],
+    card: caliTransitCard,
   },
 };

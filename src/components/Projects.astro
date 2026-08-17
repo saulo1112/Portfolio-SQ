@@ -9,9 +9,12 @@ import { projectDetails } from "../data/projectDetails";
 
 // Card thumbnail: the project's own `card` override when its lead screenshot
 // would survive the crop badly, otherwise the first figure.
-const thumbOf = (slug: string) => {
-  const d = projectDetails[slug];
-  return d ? (d.card ?? d.figures[0].src) : undefined;
+const thumbOf = (slug: string | undefined) => {
+  const d = slug ? projectDetails[slug] : undefined;
+  // Optional chaining on figures[0]: a project can be added with its lightbox
+  // copy ready before its screenshots are, in which case figures is empty and
+  // the card falls back to the CSS accent-panel placeholder below.
+  return d ? (d.card ?? d.figures[0]?.src) : undefined;
 };
 
 const featured = [
@@ -19,7 +22,7 @@ const featured = [
     title: "EUDR Forest Risk Assessment",
     tags: ["GIS", "Machine learning", "FastAPI"],
     problem:
-      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance — using only open satellite data?",
+      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance, using only open satellite data?",
     stack: "Python · PostGIS · Earth Engine · scikit-learn · Docker",
     github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
     caseStudy: "/projects/eudr-risk-assessment",
@@ -33,7 +36,7 @@ const featured = [
     title: "Fudambient",
     tags: ["Web", "Client work"],
     problem:
-      "Designing and building the institutional website for an environmental NGO — from information architecture to launch.",
+      "Designing and building the institutional website for an environmental NGO, from information architecture to launch.",
     stack: "HTML · CSS · JavaScript",
     github: "https://github.com/saulo1112/Fudambient-Page",
     caseStudy: null,
@@ -47,7 +50,7 @@ const featured = [
     title: "App Physical Recovery",
     tags: ["AI/ML", "Computer vision", "Deep learning"],
     problem:
-      "Can two deep learning models — person detection and pose estimation — turn a phone camera into a physiotherapy coach?",
+      "Can two deep learning models (person detection and pose estimation) turn a phone camera into a physiotherapy coach?",
     stack: "PyTorch · HuggingFace · gRPC · Streamlit · Docker",
     // TODO: update with saulo1112 fork URL
     github: "https://github.com/miguelfrancor01/App_PhysicalRecovery",
@@ -100,16 +103,18 @@ const small = [
     accent: "#f1f5f7",
   },
   {
-    // TODO: real title, tags, github URL and lightbox content pending
-    title: "[TODO: project name]",
-    tags: ["TBD"],
-    accent: "#0057A4",
+    title: "AirAMB",
+    tags: ["Machine learning", "Time series"],
+    github: "https://github.com/saulo1112/AirAMB",
+    slug: "airamb",
+    accent: "#2459e1",
   },
   {
-    // TODO: real title, tags, github URL and lightbox content pending
-    title: "[TODO: project name]",
-    tags: ["TBD"],
-    accent: "#D35400",
+    title: "Cali Transit Exposure",
+    tags: ["Air quality", "Mobile sensing"],
+    github: "https://github.com/saulo1112/Cali-Transit-Exposure",
+    slug: "cali-transit-exposure",
+    accent: "#2c6db0",
   },
 ];
 ---
@@ -187,6 +192,7 @@ const small = [
                     alt={`${p.title} preview`}
                     widths={[360, 620, 1240]}
                     sizes="(max-width: 600px) 92vw, (max-width: 1360px) 45vw, 620px"
+                    quality={90}
                     loading="lazy"
                     decoding="async"
                   />

@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import profilePicture from "../assets/Profile picture.png";
 ---
 
 <section class="about" id="about">
@@ -6,10 +8,13 @@
     <!-- ---- Left column: photo card ---- -->
     <div class="left">
       <div class="card" id="about-card">
-        <img
+        <Image
           class="photo"
-          src="https://pngimg.com/uploads/man/man_PNG6531.png"
+          src={profilePicture}
           alt="Portrait of Saulo Quiñones"
+          widths={[280, 473, 946]}
+          sizes="(max-width: 768px) 280px, 473px"
+          quality={90}
           loading="lazy"
         />
       </div>
@@ -21,7 +26,7 @@
     </div>
 
     <!-- ---- Right column: content ---- -->
-    <div class="right">
+    <div class="right" id="about-right">
       <p class="eyebrow">ABOUT</p>
 
       <h2 class="heading">
@@ -97,11 +102,14 @@
 
   .card {
     position: relative;
+    /* Matches the portrait's native 3:4 crop exactly, so the frame shows the
+       whole photo with no cropping instead of the fixed height tuned for the
+       previous full-body placeholder. */
+    aspect-ratio: 3 / 4;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
     overflow: hidden;
-    max-height: 500px;
     transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale(1);
     transition: transform 0.4s ease, box-shadow 0.4s ease;
     will-change: transform;
@@ -110,9 +118,14 @@
   .photo {
     display: block;
     width: 100%;
-    height: 800px;
+    height: 100%;
     object-fit: cover;
-    object-position: top center;
+    /* 80%: anchors the crop near the bottom of the source, so the shorter
+       card (see height-sync script below) trims mostly the empty background
+       above the hairline instead of the shoulders, keeping the face centered.
+       Raise this value (toward 100%) to trim more off the top; lower it
+       (toward 50%) to trim more off the bottom. */
+    object-position: center 55%;
     filter: grayscale(100%);
     transition: filter 0.4s ease;
   }
@@ -644,6 +657,39 @@
         "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)";
       card.style.boxShadow = "none";
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Photo card height sync
+  // ---------------------------------------------------------------------------
+  // CSS alone can't do this: Grid only ever *grows* the shorter column to
+  // match the taller one, never shrinks the taller one down. The card's own
+  // aspect-ratio (3:4) renders taller than the About copy, so its height is
+  // pinned here to the right column's actual rendered height instead. The photo
+  // is anchored low (object-position: center 80% on .photo) so shrinking this
+  // box trims mostly empty background above the head. Below the 768px breakpoint
+  // the columns stack and the
+  // card falls back to its CSS aspect-ratio.
+  const rightCol = document.getElementById("about-right") as HTMLElement | null;
+  const leftCol = document.querySelector<HTMLElement>(".about .left");
+  const badge = document.querySelector<HTMLElement>(".about .badge");
+
+  if (card && rightCol && leftCol && badge) {
+    const syncCardHeight = () => {
+      if (window.innerWidth <= 768) {
+        card.style.height = ""; // let the aspect-ratio drive mobile sizing
+        return;
+      }
+      const gap = parseFloat(getComputedStyle(leftCol).rowGap || "0");
+      const target = rightCol.offsetHeight - badge.offsetHeight - gap;
+      card.style.height = `${Math.max(target, 200)}px`;
+    };
+
+    syncCardHeight();
+    window.addEventListener("resize", syncCardHeight);
+    // Web fonts can swap in after first paint and change the copy's line
+    // count; re-measure once they've settled.
+    document.fonts?.ready?.then(syncCardHeight);
   }
 
   // ---------------------------------------------------------------------------

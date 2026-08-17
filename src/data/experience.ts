@@ -16,10 +16,10 @@ export const experienceEntries: ExperienceEntry[] = [
   {
     yearLabel: "NOW",
     dateRange: "Feb 2026 – Present",
-    title: "Cauca River Biological Corridor — Geospatial Data Engineering",
+    title: "Cauca River Biological Corridor: Geospatial Data Engineering",
     company: "UAO × ASOCAÑA",
     bullets: [
-      "Geospatial database (ArcGIS Pro, EPSG:9377/3115) reconciling 4 institutional sources — 15 tributaries, 35+ monitoring stations, 1990–2026.",
+      "Geospatial database (ArcGIS Pro, EPSG:9377/3115) reconciling 4 institutional sources: 15 tributaries, 35+ monitoring stations, 1990–2026.",
       "Automated Python pipelines (pyproj, arcpy, pandas/NumPy) for coordinate transforms and series cleanup.",
       "Public interactive map viewer (MapLibre GL JS) with toggleable layers, per-station panels, and CSV export.",
       "Two pollutant-load estimation methods (mass balance, export-coefficient) with cross-method uncertainty analysis.",
@@ -44,10 +44,10 @@ export const experienceEntries: ExperienceEntry[] = [
   {
     yearLabel: "2025",
     dateRange: "Apr – Jul 2025",
-    title: "Delfín Research Program — OptiCoder Prototype",
+    title: "Delfín Research Program: OptiCoder Prototype",
     company: "ITESA, Hidalgo, México (Remote)",
     bullets: [
-      "International research fellowship (Programa Delfín) — built the OptiCoder prototype from scratch.",
+      "International research fellowship (Programa Delfín), building the OptiCoder prototype from scratch.",
       "Ran in parallel with the ASOASIDE environmental contract (Apr–Jul 2025).",
     ],
     stack: ["React Native", "Expo", "Gemini", "Whisper"],
@@ -67,17 +67,17 @@ export const experienceEntries: ExperienceEntry[] = [
     yearLabel: "2024",
     dateRange: "Jan – Nov 2024",
     title: "Ecological Modeling & Data Mining Research",
-    company: "UAO — Semillero A+",
+    company: "UAO, Semillero A+",
     bullets: [
-      "Undergraduate thesis: data mining and ecological modeling of Cali River water quality — BMWP/Col index, PCA.",
+      "Undergraduate thesis: data mining and ecological modeling of Cali River water quality (BMWP/Col index, PCA).",
       "ETL, geospatial analysis and ML forecasting of PM₁₀/PM₂.₅ exposure on Cali's MIO transit system.",
-      "Presented at RedCOLSI — scored 94/100.",
+      "Presented at RedCOLSI, scored 94/100.",
     ],
     stack: ["Python", "Pandas", "Matplotlib", "Folium", "XLSTAT"],
   },
 ];
 
 export const educationFootnote = [
-  "Environmental Engineering, UAO — GPA 4.7/5.0 · 4× Academic Excellence Award (2021-1, 2022-1, 2024-1, 2024-3)",
-  "AI Specialization, UAO — GPA 4.9/5.0 (diploma pending, 2026)",
+  "Environmental Engineering, UAO: GPA 4.7/5.0 · 4× Academic Excellence Award (2021-1, 2022-1, 2024-1, 2024-3)",
+  "AI Specialization, UAO: GPA 4.9/5.0 (diploma pending, 2026)",
 ];

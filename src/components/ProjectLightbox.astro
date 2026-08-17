@@ -35,10 +35,15 @@ const SIZES = {
   doc: "(max-width: 620px) 90vw, 520px",
 } as const;
 
+// The largest step in each list requests more pixels than most sources need;
+// Astro clamps automatically to each image's real width (verified: no upscale,
+// no build error), so this just guarantees full native resolution is offered
+// to high-DPI screens instead of an arbitrary cap that left retina displays
+// upscaling a soft 1400px source, most visible on text-dense screenshots.
 const WIDTHS = {
-  wide: [640, 912, 1400],
-  tall: [300, 600],
-  doc: [520, 1040],
+  wide: [640, 960, 1920],
+  tall: [300, 600, 900],
+  doc: [520, 1040, 1700],
 } as const;
 ---
 
@@ -108,26 +113,31 @@ const WIDTHS = {
       }
     </div>
 
-    <div class="lb-gallery" style={`--tall-per-row: ${tallPerRow};`}>
-      {
-        detail.figures.map((f) => {
-          const mode = modeOf(f.src.width, f.src.height);
-          return (
-            <figure class={`lb-fig lb-fig--${mode}`}>
-              <Image
-                src={f.src}
-                alt={f.caption}
-                widths={[...WIDTHS[mode]]}
-                sizes={SIZES[mode]}
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="lb-fig-cap">{f.caption}</figcaption>
-            </figure>
-          );
-        })
-      }
-    </div>
+    {
+      detail.figures.length > 0 && (
+        <div class="lb-gallery" style={`--tall-per-row: ${tallPerRow};`}>
+          {
+            detail.figures.map((f) => {
+              const mode = modeOf(f.src.width, f.src.height);
+              return (
+                <figure class={`lb-fig lb-fig--${mode}`}>
+                  <Image
+                    src={f.src}
+                    alt={f.caption}
+                    widths={[...WIDTHS[mode]]}
+                    sizes={SIZES[mode]}
+                    format="png"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption class="lb-fig-cap">{f.caption}</figcaption>
+                </figure>
+              );
+            })
+          }
+        </div>
+      )
+    }
   </article>
 </dialog>
 
