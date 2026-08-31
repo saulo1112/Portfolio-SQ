@@ -71,11 +71,19 @@ const WIDTHS = {
       <p class="lb-tagline">{detail.tagline}</p>
 
       <div class="lb-actions">
-        <a class="lb-gh" href={detail.github} target="_blank" rel="noopener">
-          View on GitHub ↗
-        </a>
+        {detail.github && (
+          <a class="lb-gh" href={detail.github} target="_blank" rel="noopener">
+            View on GitHub ↗
+          </a>
+        )}
+        {detail.live && (
+          <a class="lb-gh" href={detail.live.href} target="_blank" rel="noopener">
+            {detail.live.label}
+          </a>
+        )}
         <span class="lb-stack">{detail.stack}</span>
       </div>
+      {detail.liveNote && <p class="lb-live-note">{detail.liveNote}</p>}
     </header>
 
     <dl class="lb-facts">
@@ -295,6 +303,12 @@ const WIDTHS = {
   .lb-gh:hover {
     background: color-mix(in srgb, var(--accent) 12%, transparent);
     border-color: var(--accent);
+  }
+
+  .lb-live-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--color-text-muted);
   }
 
   .lb-stack {

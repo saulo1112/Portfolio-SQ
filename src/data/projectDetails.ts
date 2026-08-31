@@ -65,7 +65,15 @@ export type ProjectDetail = {
   tagline: string;
   tags: string[];
   accent: string;
-  github: string;
+  /** Omit when the source shouldn't be public (e.g. a client repo) — the
+      GitHub pill is only rendered when this is set. */
+  github?: string;
+  /** Optional deployed-site link, rendered as a second pill beside GitHub
+      (or alone, when github is omitted). */
+  live?: { label: string; href: string };
+  /** Shown under the actions row, e.g. to flag that a live link isn't on its
+      final domain yet. */
+  liveNote?: string;
   stack: string;
   /** Short key/value facts rendered as a strip under the header. */
   facts: { label: string; value: string }[];
@@ -192,6 +200,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["GIS", "Machine learning", "FastAPI"],
     accent: "#1D9E75",
     github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/EUDR_Risk_Assessment/",
+    },
     stack:
       "Python · PostGIS · Earth Engine · scikit-learn · FastAPI · Docker",
     facts: [
@@ -239,7 +251,13 @@ export const projectDetails: Record<string, ProjectDetail> = {
       "An environmental NGO with two decades of fieldwork and no way to show it. Five pages, two languages, zero build step.",
     tags: ["Web", "Client work", "i18n"],
     accent: "#aaf683",
-    github: "https://github.com/saulo1112/Fudambient-Page",
+    // No GitHub pill: the repo is a client site with the NGO's own content,
+    // not meant to sit open-source under a personal account.
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/Fudambient-VF/index.html",
+    },
+    liveNote: "Hosting and domain are still pending handoff with the client.",
     stack: "HTML · CSS · JavaScript · Native ES modules · JSON i18n",
     facts: [
       { label: "Client", value: "Fudambient , environmental NGO" },

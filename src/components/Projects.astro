@@ -38,7 +38,12 @@ const featured = [
     problem:
       "Designing and building the institutional website for an environmental NGO, from information architecture to launch.",
     stack: "HTML · CSS · JavaScript",
-    github: "https://github.com/saulo1112/Fudambient-Page",
+    // No GitHub pill here either — see the note on the lightbox entry in
+    // projectDetails.ts (client site, repo not meant to be public).
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/Fudambient-VF/index.html",
+    },
     caseStudy: null,
     slug: "fudambient",
     video: fudambientVideo,
@@ -139,15 +144,28 @@ const small = [
                 preload="none"
                 style={`object-fit: ${p.fit ?? "cover"}; width: 100%; height: 100%; display: block; border-radius: 0;${p.zoom && p.zoom !== 1 ? ` transform: scale(${p.zoom}); transform-origin: center;` : ""}`}
               />
-              <a
-                class="gh"
-                href={p.github}
-                target="_blank"
-                rel="noopener"
-                aria-label={`GitHub: ${p.title}`}
-              >
-                GitHub ↗
-              </a>
+              {p.github && (
+                <a
+                  class="gh"
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`GitHub: ${p.title}`}
+                >
+                  GitHub ↗
+                </a>
+              )}
+              {p.live && (
+                <a
+                  class="gh"
+                  href={p.live.href}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`Live: ${p.title}`}
+                >
+                  {p.live.label}
+                </a>
+              )}
             </div>
             <div class="info">
               <div class="tags">
