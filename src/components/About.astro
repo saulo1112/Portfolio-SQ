@@ -18,10 +18,6 @@ import profilePicture from "../assets/Profile picture.png";
           loading="lazy"
         />
       </div>
-
-      <div class="badge">
-        <span class="badge-text"></span>
-      </div>
     </div>
 
     <!-- ---- Right column: content ---- -->
@@ -73,7 +69,7 @@ import profilePicture from "../assets/Profile picture.png";
     margin: 0 auto;
     display: grid;
     grid-template-columns: 45% 55%;
-    align-items: start;
+    align-items: stretch;
     gap: 48px;
   }
 
@@ -81,15 +77,14 @@ import profilePicture from "../assets/Profile picture.png";
   .left {
     display: flex;
     flex-direction: column;
-    gap: 16px;
   }
 
   .card {
     position: relative;
-    /* Matches the portrait's native 3:4 crop exactly, so the frame shows the
-       whole photo with no cropping instead of the fixed height tuned for the
-       previous full-body placeholder. */
-    aspect-ratio: 3 / 4;
+    /* Grid stretch makes the card exactly as tall as the right column; the
+       photo is absolutely positioned so it never influences that height. */
+    flex: 1;
+    min-height: 0;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
@@ -100,6 +95,8 @@ import profilePicture from "../assets/Profile picture.png";
   }
 
   .photo {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
@@ -116,27 +113,6 @@ import profilePicture from "../assets/Profile picture.png";
 
   .card:hover .photo {
     filter: grayscale(0%);
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    align-self: flex-start;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 8px 2px rgba(29, 158, 117, 0.2);
-  }
-
-  .badge-text {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-muted);
   }
 
   /* ---- Right column ---- */
@@ -171,7 +147,7 @@ import profilePicture from "../assets/Profile picture.png";
 
   /* ---- Stats grid ---- */
   .stats {
-    margin-top: 16px;
+    margin-top: 12px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     border: 1px solid var(--color-border);
@@ -216,7 +192,7 @@ import profilePicture from "../assets/Profile picture.png";
 
   /* ---- Languages ---- */
   .languages {
-    margin-top: 13px;
+    margin-top: 10px;
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--color-text-muted);
@@ -237,6 +213,8 @@ import profilePicture from "../assets/Profile picture.png";
     }
 
     .card {
+      flex: none;
+      aspect-ratio: 3 / 4;
       max-width: 280px;
       margin: 0 auto;
     }
@@ -644,39 +622,6 @@ import profilePicture from "../assets/Profile picture.png";
         "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)";
       card.style.boxShadow = "none";
     });
-  }
-
-  // ---------------------------------------------------------------------------
-  // Photo card height sync
-  // ---------------------------------------------------------------------------
-  // CSS alone can't do this: Grid only ever *grows* the shorter column to
-  // match the taller one, never shrinks the taller one down. The card's own
-  // aspect-ratio (3:4) renders taller than the About copy, so its height is
-  // pinned here to the right column's actual rendered height instead. The photo
-  // is anchored low (object-position: center 80% on .photo) so shrinking this
-  // box trims mostly empty background above the head. Below the 768px breakpoint
-  // the columns stack and the
-  // card falls back to its CSS aspect-ratio.
-  const rightCol = document.getElementById("about-right") as HTMLElement | null;
-  const leftCol = document.querySelector<HTMLElement>(".about .left");
-  const badge = document.querySelector<HTMLElement>(".about .badge");
-
-  if (card && rightCol && leftCol && badge) {
-    const syncCardHeight = () => {
-      if (window.innerWidth <= 768) {
-        card.style.height = ""; // let the aspect-ratio drive mobile sizing
-        return;
-      }
-      const gap = parseFloat(getComputedStyle(leftCol).rowGap || "0");
-      const target = rightCol.offsetHeight - badge.offsetHeight - gap;
-      card.style.height = `${Math.max(target, 200)}px`;
-    };
-
-    syncCardHeight();
-    window.addEventListener("resize", syncCardHeight);
-    // Web fonts can swap in after first paint and change the copy's line
-    // count; re-measure once they've settled.
-    document.fonts?.ready?.then(syncCardHeight);
   }
 
   // ---------------------------------------------------------------------------
