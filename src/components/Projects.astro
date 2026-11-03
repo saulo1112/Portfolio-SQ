@@ -3,6 +3,7 @@ import eudrVideo from "../assets/Videos/EUDR Hero Animation.mp4";
 import fudambientVideo from "../assets/Videos/Fudambient.mp4";
 import physicalRecoveryVideo from "../assets/Videos/App Physical Recovery.mp4";
 import optiCoderVideo from "../assets/Videos/OptiCoder Hero.mp4";
+import riverEtchVideo from "../assets/Videos/RiverEtch Hero Animation.mp4";
 import { Image } from "astro:assets";
 import ProjectLightbox from "./ProjectLightbox.astro";
 import { projectDetails } from "../data/projectDetails";
@@ -19,21 +20,19 @@ const thumbOf = (slug: string | undefined) => {
 
 const featured = [
   {
-    title: "EUDR Forest Risk Assessment",
-    tags: ["GIS", "Machine learning", "FastAPI"],
+    title: "RiverEtch",
+    tags: ["GIS", "Blockchain", "Hackathon"],
     problem:
-      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance, using only open satellite data?",
-    stack: "Python · PostGIS · Earth Engine · scikit-learn · Docker",
+      "How do you read a river with no station from free satellite images, and let anyone prove a reading was never changed?",
+    stack: "Python · LightGBM · Sentinel-2 · React · Ethereum · Bitcoin",
     live: {
       label: "Live ↗",
-      href: "https://saulo1112.github.io/EUDR_Risk_Assessment/",
+      href: "https://river-etch.vercel.app/",
     },
-    caseStudy: "/projects/eudr-risk-assessment",
-    slug: "eudr",
-    video: eudrVideo,
-    accent: "#1D9E75",
-    fit: "fill",
-    zoom: 1,
+    caseStudy: null,
+    slug: "river-etch",
+    video: riverEtchVideo,
+    accent: "#1e5ab8",
   },
   {
     title: "Fudambient",
@@ -53,6 +52,23 @@ const featured = [
     accent: "#aaf683",
     fit: "contain",
     zoom: 1.34,
+  },
+  {
+    title: "EUDR Forest Risk Assessment",
+    tags: ["GIS", "Machine learning", "FastAPI"],
+    problem:
+      "How do you screen 4,170 real agricultural parcels for EU deforestation compliance, using only open satellite data?",
+    stack: "Python · PostGIS · Earth Engine · scikit-learn · Docker",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/EUDR_Risk_Assessment/",
+    },
+    caseStudy: "/projects/eudr-risk-assessment",
+    slug: "eudr",
+    video: eudrVideo,
+    accent: "#1D9E75",
+    fit: "fill",
+    zoom: 1,
   },
   {
     title: "App Physical Recovery",
@@ -77,6 +93,20 @@ const featured = [
     slug: "opticoder",
     video: optiCoderVideo,
     accent: "#0057A4",
+  },
+  {
+    title: "Ortho Vision AI",
+    tags: ["AI/ML", "Computer vision"],
+    problem:
+      "Surgeons spend up to 30 minutes identifying an implant before surgery. Can instance segmentation read the radiograph instead?",
+    stack: "YOLOv8-seg · ONNX Runtime · FastAPI · OpenCV · Expo",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/Ortho-Vision-AI/",
+    },
+    caseStudy: null,
+    slug: "ortho-vision",
+    accent: "#f1f5f7",
   },
 ];
 
@@ -112,14 +142,14 @@ const small = [
     accent: "#4ac4c9",
   },
   {
-    title: "Ortho Vision AI",
-    tags: ["AI/ML", "Computer vision"],
+    title: "TrueMask",
+    tags: ["Privacy", "Zero-knowledge"],
     live: {
       label: "Live ↗",
-      href: "https://saulo1112.github.io/Ortho-Vision-AI/",
+      href: "https://midnight-hackathon-image-blurring-web-true-mask.vercel.app/",
     },
-    slug: "ortho-vision",
-    accent: "#f1f5f7",
+    slug: "true-mask",
+    accent: "#ffffff",
   },
   {
     title: "AirAMB",
@@ -153,15 +183,32 @@ const small = [
         featured.map((p) => (
           <article class="item" style={`--accent: ${p.accent};`}>
             <div class="media">
-              <video
-                src={p.video}
-                autoplay
-                loop
-                muted
-                playsinline
-                preload="none"
-                style={`object-fit: ${p.fit ?? "cover"}; width: 100%; height: 100%; display: block; border-radius: 0;${p.zoom && p.zoom !== 1 ? ` transform: scale(${p.zoom}); transform-origin: center;` : ""}`}
-              />
+              {p.video ? (
+                <video
+                  src={p.video}
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  preload="none"
+                  style={`object-fit: ${p.fit ?? "cover"}; width: 100%; height: 100%; display: block; border-radius: 0;${p.zoom && p.zoom !== 1 ? ` transform: scale(${p.zoom}); transform-origin: center;` : ""}`}
+                />
+              ) : (
+                (() => {
+                  const thumb = thumbOf(p.slug);
+                  return thumb ? (
+                    <Image
+                      src={thumb}
+                      alt={`${p.title} preview`}
+                      widths={[480, 800, 1200]}
+                      sizes="(max-width: 900px) 92vw, 640px"
+                      quality={90}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : null;
+                })()
+              )}
               {p.github && (
                 <a
                   class="gh"
@@ -221,12 +268,17 @@ const small = [
             <div class="media">
               {(() => {
                 const thumb = thumbOf(p.slug);
+                // object-fit: cover scales an image wider than the 16/11 box
+                // past the box's width, so it needs a proportionally larger source.
+                const scale = thumb
+                  ? Math.max(1, thumb.width / thumb.height / (16 / 11))
+                  : 1;
                 return thumb ? (
                   <Image
                     src={thumb}
                     alt={`${p.title} preview`}
                     widths={[360, 620, 1240]}
-                    sizes="(max-width: 600px) 92vw, (max-width: 1360px) 45vw, 620px"
+                    sizes={`(max-width: 600px) ${Math.round(92 * scale)}vw, (max-width: 1360px) ${Math.round(45 * scale)}vw, ${Math.round(620 * scale)}px`}
                     quality={90}
                     loading="lazy"
                     decoding="async"
@@ -382,6 +434,7 @@ const small = [
   /* Cards without a screenshot yet (no <img> inside .media) fall back to a
      solid panel in the project's own accent — a placeholder that still reads
      as "this project" rather than a blank box. */
+  .item .media:not(:has(video)):not(:has(img)),
   .item-sm .media:not(:has(img)) {
     background: var(--accent);
   }
@@ -537,6 +590,7 @@ const small = [
 
   /* Card preview. Portrait screenshots lose most of their height to the 16/11
      crop, so they are anchored to the top where the app header still reads. */
+  .item .media :global(img),
   .item-sm .media :global(img) {
     width: 100%;
     height: 100%;
@@ -596,6 +650,26 @@ const small = [
   }
 
   for (const dialog of document.querySelectorAll<HTMLDialogElement>("dialog.lb")) {
+    // Demo video: the poster swaps to the YouTube player on click, and closing
+    // the dialog restores the poster, which also stops playback.
+    const video = dialog.querySelector<HTMLElement>(".lb-video");
+    const poster = video?.querySelector<HTMLButtonElement>(".lb-video-btn");
+    if (video && poster) {
+      poster.addEventListener("click", () => {
+        const frame = document.createElement("iframe");
+        frame.src = `https://www.youtube-nocookie.com/embed/${video.dataset.yt}?autoplay=1&rel=0`;
+        frame.title = "Demo video";
+        frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+        frame.allowFullscreen = true;
+        poster.hidden = true;
+        video.append(frame);
+      });
+      dialog.addEventListener("close", () => {
+        video.querySelector("iframe")?.remove();
+        poster.hidden = false;
+      });
+    }
+
     dialog.addEventListener("close", () => lockScroll(false));
 
     dialog

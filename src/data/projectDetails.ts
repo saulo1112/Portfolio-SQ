@@ -46,6 +46,16 @@ import transitDistributions from "../assets/Images/Projects/Cali Transit Exposur
 import airambInterface from "../assets/Images/Projects/AirAMB/Interface (1).png";
 import airambReport from "../assets/Images/Projects/AirAMB/Report (2).png";
 
+import riverEtch1 from "../assets/Images/Projects/RiverEtch/01-start-page.jpg";
+import riverEtch2 from "../assets/Images/Projects/RiverEtch/02-river-with-station.jpg";
+import riverEtch3 from "../assets/Images/Projects/RiverEtch/03-along-the-river.jpg";
+import riverEtch4 from "../assets/Images/Projects/RiverEtch/04-firat-turkiye.jpg";
+
+import trueMask1 from "../assets/Images/Projects/TrueMask/Task Selection (1).png";
+import trueMask2 from "../assets/Images/Projects/TrueMask/Review sensitive regions (2).png";
+import trueMask3 from "../assets/Images/Projects/TrueMask/Protected image review (3).png";
+import trueMask4 from "../assets/Images/Projects/TrueMask/Creation of protection record (4).png";
+
 // Dedicated card thumbnails, framed to the card's 16:11 box so nothing crops.
 import caliRiverCard from "../assets/Images/Thumbnails/Cali River Biomonitoring.png";
 import siteSelectionCard from "../assets/Images/Thumbnails/Site Selection Engine.png";
@@ -71,6 +81,9 @@ export type ProjectDetail = {
   /** Optional deployed-site link, rendered as a second pill beside GitHub
       (or alone, when github is omitted). */
   live?: { label: string; href: string };
+  /** YouTube demo video, shown above the gallery as a thumbnail that opens
+      the video on YouTube. Pass the video id (the v= value of the URL). */
+  video?: { youtubeId: string };
   /** Shown under the actions row, e.g. to flag that a live link isn't on its
       final domain yet. */
   liveNote?: string;
@@ -610,5 +623,129 @@ export const projectDetails: Record<string, ProjectDetail> = {
       { src: transitDistributions, caption: "Concentration distributions against Resolución 2254 de 2017 thresholds" },
     ],
     card: caliTransitCard,
+  },
+
+  "river-etch": {
+    title: "RiverEtch",
+    tagline:
+      "A river can run for kilometres with no station on it. Can free satellite images read the water there, and can anyone check that a reading was never changed afterwards?",
+    tags: ["GIS", "Blockchain", "Remote sensing", "Hackathon"],
+    accent: "#1e5ab8",
+    github: "https://github.com/saulo1112/RiverEtch",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://river-etch.vercel.app/",
+    },
+    video: { youtubeId: "7XM9NeKMYoY" },
+    stack:
+      "Python · LightGBM · Sentinel-2 · Landsat · React · MapLibre · Solidity · Ethereum · OpenTimestamps",
+    facts: [
+      { label: "Event", value: "IEEE ClimateChain Global Hackathon 2026" },
+      { label: "Track", value: "Climate Data & Environmental Monitoring" },
+      { label: "Reaches", value: "4 on 3 rivers (USA, Türkiye)" },
+      { label: "Delivery", value: "Web app, no wallet or account" },
+    ],
+    metrics: [
+      { value: "17.8%", label: "Median turbidity error at Belle Chasse, against 113.7% for guessing" },
+      { value: "33.1% vs 71.4%", label: "Median error over nine stations, against guessing the usual value" },
+      { value: "160 / 298", label: "Passes where the class matched the station, on rivers the model never saw" },
+      { value: "3", label: "Independent checks on every reading: Ethereum, Bitcoin, a quantum-safe signature" },
+    ],
+    sections: [
+      {
+        heading: "The problem",
+        body: [
+          "When a river floods, or runs so low that salt water creeps up it, a water utility or an environmental agency needs to know how muddy and how warm the water is. A measuring station answers that for the one spot where it stands. The rest of the river, and the many rivers with no station at all, go unmeasured exactly when it matters. Satellites look at those rivers every few days for free, but a number made from a picture raises two fair questions: how far off can it be, and could someone change it later?",
+        ],
+      },
+      {
+        heading: "The approach",
+        body: [
+          "Every clear pass of Sentinel-2 or Landsat becomes a reading of turbidity (in FNU) and water temperature (in °C), at the station and on a window every 600 m along the reach. A frozen model turns the pass into a value: a ridge regression at stations, a LightGBM model where there is none, and a calibrated Landsat thermal band for temperature. Each value comes with the range to expect, built with split conformal prediction. If an image falls outside what the model was trained on, it gives no reading and says why.",
+          "Each reading is then sealed. Its SHA-256 fingerprint goes into the river's ledger, where every line names the line before. The ledger's last fingerprint is posted on Ethereum (Sepolia), timestamped on Bitcoin through OpenTimestamps and signed with ML-DSA-65, a quantum-safe signature. Change one number and the fingerprint no longer matches. The web app recomputes all of this in the browser, so checking a reading needs no wallet and no account, and the daily run that reads new passes holds no key.",
+        ],
+      },
+      {
+        heading: "Testing before trusting",
+        body: [
+          "Every test was written, frozen and anchored on Ethereum before it ran, and then run once. The locked test covers December 2023 to September 2026, years the training and the model selection never saw, and each error sits beside the baseline you would get without the satellite. At Belle Chasse (Mississippi) turbidity was off by 17.8% at the median over 57 passes, against 113.7% for repeating the past median. On the Platte it was 20.3% against 66.9%. Water temperature came out at 1.28 °C and 0.86 °C mean absolute error on the two reaches.",
+          "On rivers the model never saw, half of 298 passes were within 36.9% of the station, and the class matched in 160 of them against 61 for always guessing the most common class. Discharge, dissolved oxygen and suspended sediment were tested the same way and are not shown as satellite readings, because the tests did not support it. The project also says what it cannot do: a seal shows a reading was not changed, not that it is exact, and the 2019 to 2025 passes are labelled as recomputed, not sealed.",
+        ],
+      },
+      {
+        heading: "The hackathon",
+        body: [
+          "RiverEtch was my entry to the IEEE ClimateChain Global Hackathon 2026, in Track 4, Climate Data & Environmental Monitoring. It covers what the track asks for with satellite integration for turbidity and temperature, sealed and witnessed readings, and an Export with proof option that lets the data leave with the means to verify it. Check a file takes a zip or CSV someone sends you and reports which rows are unchanged, which cells were edited and which rows were deleted, all in the browser.",
+        ],
+      },
+    ],
+    figures: [
+      { src: riverEtch1, caption: "Start page: a globe with the rivers it follows, and the three facts behind every reading" },
+      { src: riverEtch2, caption: "Mississippi at Belle Chasse: 49.0 FNU with its 90% range, 17.8% median error against 113.7% for guessing" },
+      { src: riverEtch3, caption: "Along the river: one column per satellite pass of 2026, one row per 600 m stretch" },
+      { src: riverEtch4, caption: "Fırat at Birecik, Türkiye: a reach with no station, so a value and the range of its class" },
+    ],
+  },
+
+  "true-mask": {
+    title: "TrueMask",
+    tagline:
+      "A soft blur can be reversed, and a reader cannot tell whether the rest of a published photo was edited. Can redaction be made provable, without handing over the original?",
+    tags: ["Privacy", "Zero-knowledge", "Computer vision", "Hackathon"],
+    accent: "#ffffff",
+    github: "https://github.com/bantoklara/true-mask",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://midnight-hackathon-image-blurring-web-true-mask.vercel.app/",
+    },
+    video: { youtubeId: "gbo4R6iRSCo" },
+    stack:
+      "Next.js · TypeScript · Compact · Midnight · Human · Tesseract OCR · WebCrypto",
+    facts: [
+      { label: "Event", value: "Midnight Hackathon August 2026" },
+      { label: "Team", value: "5 people" },
+      { label: "My part", value: "Concept, Compact contracts, demo video" },
+      { label: "Domain", value: "Journalism, source protection" },
+    ],
+    metrics: [
+      { value: "58", label: "Automated tests: 10 on the contract, 48 on the vision pipeline" },
+      { value: "1 pixel", label: "Any change outside the redactions fails verification" },
+      { value: "~2 s", label: "To redact and hash a 1920×1080 photo (8,160 blocks)" },
+      { value: "0", label: "Bytes of the original that leave the journalist's machine" },
+    ],
+    sections: [
+      {
+        heading: "The problem",
+        body: [
+          "A journalist photographs a source, a witness or a risky scene. AI can now work out where a photo was taken from background detail alone, such as faces, shop signs or a recognisable facade, with no GPS metadata. Publishing the picture can expose both the source and the journalist. Covering the sensitive parts with a soft effect is not enough for two reasons. Gaussian blur and pixelation both leak enough to be attacked, and nobody can check the rest: a reader cannot know whether the uncovered part is the real scene, and the journalist cannot prove it without handing over the original.",
+        ],
+      },
+      {
+        heading: "The approach",
+        body: [
+          "Everything happens on the journalist's machine. Faces are found in the browser with Human, and signs, plates and documents with Tesseract OCR. The journalist reviews the detections and has the final say. Every approved region is blacked out irreversibly and exported as a lossless PNG, never a soft cover and never a JPEG.",
+          "The image is cut into a fixed grid of 16 px blocks, and a cryptographic root is computed over every block that was not redacted. A zero-knowledge circuit on Midnight, written in Compact, records that root, asserting that the untouched blocks of the published image hash identically to the same blocks of the original. A circuit cannot hash a whole photo, so the work is reduced outside it to 16 lane digests and the circuit hashes only those, which keeps its cost constant for any image size. Anyone holding the published photo can re-run the hashing and compare it with the chain, with no wallet, no cost and no setup.",
+        ],
+      },
+      {
+        heading: "What is built, and what isn't",
+        body: [
+          "The contract, the vision pipeline, the prover and verifier agreement and tamper detection are working and covered by tests. The most important one asserts that the root computed in TypeScript is byte-identical to the root computed by the compiled circuit, so a compiler change cannot silently stop proofs from verifying. Publishing to Midnight Preprod was tested against real infrastructure and hit a network-wide WebSocket issue that other teams at the hackathon reported too. The app bounds every wallet call with a timeout and a Cancel button, and says plainly that the image stays protected and verifiable offline.",
+          "The README states the limits as well. The proof shows tamper-evidence, not that the journalist started from the right original, since both roots come from the prover. There is no licence-plate detector, so plates are covered only when OCR reads their characters, and large photos hash on the main thread, taking about 8.6 s at 12 MP.",
+        ],
+      },
+      {
+        heading: "The hackathon team",
+        body: [
+          "TrueMask was built for the Midnight Hackathon August 2026 by a team of five. My contribution centred on the original concept, the Compact smart contracts and the demo video. I framed the problem, AI-based photo geolocation putting journalists and their sources at risk, and shaped it into the redaction-integrity approach the project is built on. On the contract side I worked on the submit_redaction and verify_integrity circuits and on the decision to hash image blocks outside the circuit, so the cost stays constant whatever the size of the photo. I also reviewed and refined UI details throughout the app.",
+        ],
+      },
+    ],
+    figures: [
+      { src: trueMask1, caption: "Start screen: protect an original photo, or verify an image someone published" },
+      { src: trueMask2, caption: "Faces detected in the browser, each one with a risk level the journalist can keep or drop" },
+      { src: trueMask3, caption: "Original beside protected: 2 regions blacked out, 0 unauthorized changes elsewhere" },
+      { src: trueMask4, caption: "Protection record with the original and protected image commitments, ready for Midnight" },
+    ],
   },
 };
