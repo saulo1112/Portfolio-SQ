@@ -629,7 +629,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     title: "RiverEtch",
     tagline:
       "A river can run for kilometres with no station on it. Can free satellite images read the water there, and can anyone check that a reading was never changed afterwards?",
-    tags: ["GIS", "Blockchain", "Remote sensing", "Hackathon"],
+    tags: ["AI/ML", "GIS", "Blockchain", "Web Design"],
     accent: "#1e5ab8",
     github: "https://github.com/saulo1112/RiverEtch",
     live: {
@@ -638,7 +638,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     },
     video: { youtubeId: "7XM9NeKMYoY" },
     stack:
-      "Python · LightGBM · Sentinel-2 · Landsat · React · MapLibre · Solidity · Ethereum · OpenTimestamps",
+      "Python · LightGBM · Sentinel-2 · Landsat · React · Three.js · MapLibre · Solidity · Ethereum · OpenTimestamps",
     facts: [
       { label: "Event", value: "IEEE ClimateChain Global Hackathon 2026" },
       { label: "Track", value: "Climate Data & Environmental Monitoring" },
@@ -673,6 +673,13 @@ export const projectDetails: Record<string, ProjectDetail> = {
         ],
       },
       {
+        heading: "The web design",
+        body: [
+          "I put as much work into the interface as into the models, because a reading nobody can follow doesn't help anyone. The start page is an interactive 3D globe with an orbiting satellite, built with Three.js and custom shaders, and it turns with a finger on tablets and phones. Each case opens on a 3D map of the reach, painted by turbidity class stretch by stretch, with a reading spot you drag along the river and a compare view for setting a pass beside one from any year.",
+          "The harder design problem was explaining a technical result to people who don't work in remote sensing. A guided tour points at each control, How it works walks through six chapters where every number comes from a committed file, and a tamper demo lets you change one number and watch the check fail. Motion respects the reduced-motion setting, and focus rings appear for keyboard users.",
+        ],
+      },
+      {
         heading: "The hackathon",
         body: [
           "RiverEtch was my entry to the IEEE ClimateChain Global Hackathon 2026, in Track 4, Climate Data & Environmental Monitoring. It covers what the track asks for with satellite integration for turbidity and temperature, sealed and witnessed readings, and an Export with proof option that lets the data leave with the means to verify it. Check a file takes a zip or CSV someone sends you and reports which rows are unchanged, which cells were edited and which rows were deleted, all in the browser.",
@@ -691,7 +698,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     title: "TrueMask",
     tagline:
       "A soft blur can be reversed, and a reader cannot tell whether the rest of a published photo was edited. Can redaction be made provable, without handing over the original?",
-    tags: ["Privacy", "Zero-knowledge", "Computer vision", "Hackathon"],
+    tags: ["AI/ML", "Blockchain"],
     accent: "#ffffff",
     github: "https://github.com/bantoklara/true-mask",
     live: {

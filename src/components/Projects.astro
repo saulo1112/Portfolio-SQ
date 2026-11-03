@@ -21,7 +21,8 @@ const thumbOf = (slug: string | undefined) => {
 const featured = [
   {
     title: "RiverEtch",
-    tags: ["GIS", "Blockchain", "Hackathon"],
+    tags: ["AI/ML", "GIS", "Blockchain", "Web Design"],
+    tagLimit: 4,
     problem:
       "How do you read a river with no station from free satellite images, and let anyone prove a reading was never changed?",
     stack: "Python · LightGBM · Sentinel-2 · React · Ethereum · Bitcoin",
@@ -143,7 +144,7 @@ const small = [
   },
   {
     title: "TrueMask",
-    tags: ["Privacy", "Zero-knowledge"],
+    tags: ["AI/ML", "Blockchain"],
     live: {
       label: "Live ↗",
       href: "https://midnight-hackathon-image-blurring-web-true-mask.vercel.app/",
@@ -234,7 +235,7 @@ const small = [
             </div>
             <div class="info">
               <div class="tags">
-                {p.tags.slice(0, 2).map((t, i) => (
+                {p.tags.slice(0, p.tagLimit ?? 2).map((t, i) => (
                   <span class={i === 0 ? "tag tag-accent" : "tag"}>{t}</span>
                 ))}
               </div>
