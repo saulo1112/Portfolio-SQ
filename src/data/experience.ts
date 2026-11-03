@@ -85,5 +85,5 @@ export const experienceEntries: ExperienceEntry[] = [
 
 export const educationFootnote = [
   "Environmental Engineering, UAO: GPA 4.7/5.0 · 4× Academic Excellence Award (2021-1, 2022-1, 2024-1, 2024-3)",
-  "AI Specialization, UAO: GPA 4.9/5.0 (diploma pending, 2026)",
+  "AI Specialization, UAO: GPA 4.9/5.0",
 ];

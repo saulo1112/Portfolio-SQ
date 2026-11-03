@@ -146,6 +146,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["Machine learning", "Ecological modelling", "Research"],
     accent: "#4ac4c9",
     github: "https://github.com/saulo1112/cali-river-biomonitoring",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/cali-river-biomonitoring/",
+    },
     stack:
       "Python · scikit-learn · Fuzzy inference · ε-SVR · Nested LOOCV",
     facts: [
@@ -352,6 +356,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["GIS", "Spatial ML", "FastAPI"],
     accent: "#db4637",
     github: "https://github.com/saulo1112/Site_selection_engine",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/Site_selection_engine/",
+    },
     stack: "Python · PostGIS · H3 · scikit-learn · FastAPI · Streamlit · Docker",
     facts: [
       { label: "City", value: "Bogotá, chosen with data" },
@@ -399,6 +407,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["GIS", "Geospatial analysis", "JavaScript"],
     accent: "#debfc5",
     github: "https://github.com/saulo1112/RioCauca_Baseline",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/RioCauca_Baseline/",
+    },
     stack: "MapLibre GL JS · Turf.js · Python · GitHub Pages",
     facts: [
       { label: "Corridor", value: "Pan de Azúcar → La Virginia" },
@@ -455,6 +467,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["Computer vision", "Medical imaging", "Deep learning"],
     accent: "#f1f5f7",
     github: "https://github.com/saulo1112/Ortho-Vision-AI",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/Ortho-Vision-AI/",
+    },
     stack: "YOLOv8-seg · ONNX Runtime · FastAPI · OpenCV · Expo · Docker",
     facts: [
       { label: "Domain", value: "Orthopedic radiograph analysis" },
@@ -505,6 +521,10 @@ export const projectDetails: Record<string, ProjectDetail> = {
     tags: ["Machine learning", "Time series", "Desktop app"],
     accent: "#2459e1",
     github: "https://github.com/saulo1112/AirAMB",
+    live: {
+      label: "Live Demo ↗",
+      href: "https://saulo1112.github.io/AirAMB/",
+    },
     stack: "Python · pandas · scikit-learn · pywebview · PyInstaller",
     facts: [
       { label: "Domain", value: "Air quality forecasting" },

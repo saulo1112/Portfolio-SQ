@@ -24,7 +24,10 @@ const featured = [
     problem:
       "How do you screen 4,170 real agricultural parcels for EU deforestation compliance, using only open satellite data?",
     stack: "Python · PostGIS · Earth Engine · scikit-learn · Docker",
-    github: "https://github.com/saulo1112/EUDR_Risk_Assessment",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/EUDR_Risk_Assessment/",
+    },
     caseStudy: "/projects/eudr-risk-assessment",
     slug: "eudr",
     video: eudrVideo,
@@ -81,35 +84,50 @@ const small = [
   {
     title: "Site Selection Engine",
     tags: ["GIS", "Spatial ML"],
-    github: "https://github.com/saulo1112/Site_selection_engine",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/Site_selection_engine/",
+    },
     slug: "site-selection",
     accent: "#db4637",
   },
   {
     title: "Cauca River Baseline",
     tags: ["GIS", "Python"],
-    github: "https://github.com/saulo1112/RioCauca_Baseline",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/RioCauca_Baseline/",
+    },
     slug: "riocauca-baseline",
     accent: "#debfc5",
   },
   {
     title: "Cali River Biomonitoring",
     tags: ["Machine learning", "Research"],
-    github: "https://github.com/saulo1112/cali-river-biomonitoring",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/cali-river-biomonitoring/",
+    },
     slug: "cali-river",
     accent: "#4ac4c9",
   },
   {
     title: "Ortho Vision AI",
     tags: ["AI/ML", "Computer vision"],
-    github: "https://github.com/saulo1112/Ortho-Vision-AI",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/Ortho-Vision-AI/",
+    },
     slug: "ortho-vision",
     accent: "#f1f5f7",
   },
   {
     title: "AirAMB",
     tags: ["Machine learning", "Time series"],
-    github: "https://github.com/saulo1112/AirAMB",
+    live: {
+      label: "Live ↗",
+      href: "https://saulo1112.github.io/AirAMB/",
+    },
     slug: "airamb",
     accent: "#2459e1",
   },
@@ -224,6 +242,17 @@ const small = [
                   aria-label={`GitHub: ${p.title}`}
                 >
                   GitHub ↗
+                </a>
+              )}
+              {p.live && (
+                <a
+                  class="gh"
+                  href={p.live.href}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`Live: ${p.title}`}
+                >
+                  {p.live.label}
                 </a>
               )}
             </div>
