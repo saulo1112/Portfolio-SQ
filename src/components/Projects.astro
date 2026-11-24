@@ -187,7 +187,7 @@ const small = [
               {p.video ? (
                 <video
                   src={p.video}
-                  autoplay
+                  data-lazy-video
                   loop
                   muted
                   playsinline
@@ -626,6 +626,24 @@ const small = [
     }
   }
 </style>
+
+<script>
+  // Card videos only download and play while they are on screen.
+  const lazyVideos = document.querySelectorAll<HTMLVideoElement>("video[data-lazy-video]");
+  if (lazyVideos.length) {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    lazyVideos.forEach((v) => videoObserver.observe(v));
+  }
+</script>
 
 <script>
   // Project lightbox — native <dialog> gives focus trapping and Esc-to-close;

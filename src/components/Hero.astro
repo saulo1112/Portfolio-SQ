@@ -233,6 +233,8 @@ import cvPdf from "../assets/Saulo-Quinones-Gongora-Resume.pdf?url";
     // canvas) so particles drift smoothly back to their idle state instead of
     // freezing on a stale repulsion point.
     let isMouseOverRobot = false;
+    let visible = true;
+    let running = true;
 
     type Particle = {
       x: number;
@@ -414,7 +416,12 @@ import cvPdf from "../assets/Saulo-Quinones-Gongora-Resume.pdf?url";
       }
 
       ctx.globalAlpha = 1;
-      requestAnimationFrame(frame);
+      // Stop the loop while the hero is off screen or the tab is hidden.
+      if (visible) {
+        requestAnimationFrame(frame);
+      } else {
+        running = false;
+      }
     };
 
     const section = canvas.closest("section") as HTMLElement;
@@ -440,5 +447,16 @@ import cvPdf from "../assets/Saulo-Quinones-Gongora-Resume.pdf?url";
     resize();
     init();
     requestAnimationFrame(frame);
+
+    new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible && !running) {
+          running = true;
+          requestAnimationFrame(frame);
+        }
+      },
+      { threshold: 0 },
+    ).observe(target);
   }
 </script>

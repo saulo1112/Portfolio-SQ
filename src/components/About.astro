@@ -493,7 +493,9 @@ import profilePicture from "../assets/Profile picture.png";
     const clampOffset = (v: number, base: number, max: number) =>
       Math.max(base - max, Math.min(base + max, v));
 
+    let visible = true;
     const animate = () => {
+      if (!visible) { rafId = 0; return; }
       rafId = requestAnimationFrame(animate);
       const time = clock.getElapsedTime();
 
@@ -555,6 +557,12 @@ import profilePicture from "../assets/Profile picture.png";
       renderer.render(scene, camera);
     };
     animate();
+
+    // Pause rendering while the About section is off screen.
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !rafId) animate();
+    }).observe(section);
 
     // ---- Resize ----
     const onResize = () => {
