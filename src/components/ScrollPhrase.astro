@@ -3,20 +3,22 @@
 // tagged here (robust against punctuation) so the runtime script only toggles
 // the `.active` state.
 const phrase =
-  "Web, GIS, and AI, in service of systems that understand where things happen, why they happen, and what should happen next.";
+  "Data, GIS, and AI, in service of systems that show where things happen, explain why they happen, and anticipate what comes next.";
 
-const accentBases = new Set([
-  "ai",
-  "geospatial",
-  "systems",
-  "understand",
-  "happen",
-]);
+const accentBases = new Set(["show", "explain", "anticipate"]);
 
-const words = phrase.split(" ").map((text) => ({
-  text,
-  accent: accentBases.has(text.toLowerCase().replace(/[^a-z]/gi, "")),
-}));
+// Split each token into leading punctuation, the word itself, and trailing
+// punctuation so only the word is tinted with the accent color.
+const words = phrase.split(" ").map((text) => {
+  const m = text.match(/^([^A-Za-z0-9]*)(.*?)([^A-Za-z0-9]*)$/) ?? [];
+  const core = m[2] ?? text;
+  return {
+    pre: m[1] ?? "",
+    core,
+    post: m[3] ?? "",
+    accent: accentBases.has(core.toLowerCase()),
+  };
+});
 ---
 
 <section id="phrase" class="phrase-section">
@@ -37,7 +39,11 @@ const words = phrase.split(" ").map((text) => ({
       <p class="phrase-text" id="phrase-text">
         {
           words.map((w) => (
-            <span class={w.accent ? "phrase-word accent" : "phrase-word"}>{w.text} </span>
+            <span class="phrase-word">
+              {w.pre}
+              {w.accent ? <span class="accent">{w.core}</span> : w.core}
+              {w.post}{" "}
+            </span>
           ))
         }
       </p>
@@ -131,7 +137,7 @@ const words = phrase.split(" ").map((text) => ({
     color: var(--color-text-primary);
   }
 
-  .phrase-word.accent.active {
+  .phrase-word.active .accent {
     color: var(--color-accent);
   }
 

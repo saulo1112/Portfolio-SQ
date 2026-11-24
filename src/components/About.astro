@@ -25,20 +25,20 @@ import profilePicture from "../assets/Profile picture.png";
       <p class="eyebrow">ABOUT</p>
 
       <h2 class="heading">
-        Hi, I'm Saulo Quiñones. Environmental engineer, software builder.
+        Hi, I'm Saulo Quiñones, an engineer working with data, machine learning, and spatial systems.
       </h2>
 
       <p class="para">
-        I work across three areas, web development, GIS, and applied AI, and I'm comfortable picking up whatever a project needs, from a shipped interface to a machine learning pipeline. I'm an environmental engineer who has applied most of this to real world problems, and I carry that same mix of data, logic, and design into any team that needs it.
+        Specialized in artificial intelligence, I work across data analysis, machine learning, and geospatial engineering, and I build the backend and web interfaces that put results in people's hands. My projects share one habit. A result only counts once it holds up on unseen data, can be retraced step by step, and arrives with its limits stated.
       </p>
 
       <p class="para">
-        I'm strongest with spatial databases and geoprocessing, backend services in Python and Node.js, and machine learning across computer vision, time series, and accessibility tools. On the frontend I work with React and Astro. Right now I'm deep in geospatial data engineering and interactive web mapping, turning data from multiple sources into tools people actually use.
+        Spatial databases and geoprocessing are where I'm strongest, alongside Python and Node.js backends and machine learning for computer vision and time series. The core toolkit is SQL, PostGIS, scikit-learn, and PyTorch, with React and Astro on the frontend. Most of it ends in something people can open and use, whether that is an API, a map, or a dashboard.
       </p>
 
       <div class="stats" id="about-stats">
         <div class="stat">
-          <span class="stat-num" data-target="10" data-format="int-plus">0</span>
+          <span class="stat-num" data-target="12" data-format="int-plus">0</span>
           <span class="stat-label">Projects built</span>
         </div>
         <div class="stat">
@@ -132,6 +132,7 @@ import profilePicture from "../assets/Profile picture.png";
     letter-spacing: -0.01em;
     color: var(--color-text-primary);
     margin-bottom: 24px;
+    hyphens: manual;
   }
 
   .para {
@@ -142,7 +143,7 @@ import profilePicture from "../assets/Profile picture.png";
     margin-bottom: 16px;
     text-align: justify;
     text-justify: inter-word;
-    hyphens: auto;
+    hyphens: manual;
   }
 
   /* ---- Stats grid ---- */
@@ -532,7 +533,7 @@ import profilePicture from "../assets/Profile picture.png";
         projVec.copy(mesh.position).project(camera);
         const screenFrac = (projVec.x + 1) / 2; // 0 = left edge, 1 = right edge
         const inRightZone = screenFrac > 0.48;
-        const opacityTarget = inRightZone ? (o.isRecessed ? 0.15 : 0.25) : 1.0;
+        const opacityTarget = inRightZone ? (o.isRecessed ? 0.06 : 0.1) : 1.0;
         material.transparent = true;
         material.opacity = lerp(material.opacity, opacityTarget, 0.04);
         // Turn transparent back off once fully opaque to avoid z-sorting cost.
